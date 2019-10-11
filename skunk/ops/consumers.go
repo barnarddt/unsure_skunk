@@ -29,7 +29,7 @@ func makeConsume(b Backends, c skunk.Client) reflex.Consumer {
 		}
 
 		if reflex.IsType(e.Type, skunk.RoundStatusSubmitted) {
-			if err := submitNext(ctx, b, c, e); err != nil {
+			if err := updateSubmitState(ctx, b, c, e); err != nil {
 				return err
 			}
 		}

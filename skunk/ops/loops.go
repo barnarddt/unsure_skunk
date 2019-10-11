@@ -3,17 +3,15 @@ package ops
 import (
 	"context"
 	"time"
-
-	"github.com/corverroos/unsure"
-	"github.com/corverroos/unsure/engine"
-	"github.com/luno/fate"
-	"github.com/luno/jettison/errors"
-	"github.com/luno/jettison/log"
-	"github.com/luno/reflex"
-
 	"unsure_skunk/skunk"
 	"unsure_skunk/skunk/db/cursors"
 	"unsure_skunk/skunk/db/events"
+
+	"github.com/corverroos/unsure"
+	"github.com/corverroos/unsure/engine"
+	"github.com/luno/jettison/errors"
+	"github.com/luno/jettison/log"
+	"github.com/luno/reflex"
 )
 
 func StartLoops(b Backends) {
@@ -27,6 +25,7 @@ func StartLoops(b Backends) {
 	go joinMatchesForever(b)
 	go skipLocalJoinedForever(b)
 	go collectRemotePartsForever(b)
+	go submitPartsForever(b)
 }
 
 func consumePeerEvents(b Backends, peer skunk.Client) {
@@ -84,11 +83,9 @@ func collectRemotePartsForever(b Backends) {
 	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }
 
-func Dummy(backends Backends) reflex.Consumer {
-	fn := func(ctx context.Context, fate fate.Fate, e *reflex.Event) error {
-
-		return fate.Tempt()
-	}
-
-	return reflex.NewConsumer(reflex.ConsumerName("generic"), fn)
+func submitPartsForever(b Backends) {
+	consumable := reflex.NewConsumable(events.ToStream(b.SkunkDB().DB),
+		cursors.ToStore(b.SkunkDB().DB))
+	consumer := submitParts(b)
+	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }

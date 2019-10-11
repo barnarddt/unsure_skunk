@@ -19,15 +19,14 @@ create table events (
 
 create table rounds (
   id bigint not null auto_increment,        -- 1
-  ext_id bigint not null,                   -- 1
+  external_id bigint not null,                   -- 1
   player varchar(255),                      -- "Skunk#1"
-  rank int not null,                        -- 1
   status int not null,                      -- StatusCollected(1)
 
   created_at datetime(3) not null,
   updated_at datetime(3) not null,
 
-  unique by_team_status (player, ext_id),
+  unique by_team_status (player, external_id),
 
   primary key (id)
 );
