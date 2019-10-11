@@ -34,7 +34,7 @@ func (m *Empty) Reset()         { *m = Empty{} }
 func (m *Empty) String() string { return proto.CompactTextString(m) }
 func (*Empty) ProtoMessage()    {}
 func (*Empty) Descriptor() ([]byte, []int) {
-	return fileDescriptor_skunk_ac692200d84155b4, []int{0}
+	return fileDescriptor_skunk_30880a7d9cd8b144, []int{0}
 }
 func (m *Empty) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Empty.Unmarshal(m, b)
@@ -54,7 +54,7 @@ func (m *Empty) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Empty proto.InternalMessageInfo
 
-type GetPartsReq struct {
+type GetDataReq struct {
 	RoundId              int64    `protobuf:"varint,1,opt,name=round_id,json=roundId,proto3" json:"round_id,omitempty"`
 	Player               string   `protobuf:"bytes,2,opt,name=player,proto3" json:"player,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -62,84 +62,84 @@ type GetPartsReq struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetPartsReq) Reset()         { *m = GetPartsReq{} }
-func (m *GetPartsReq) String() string { return proto.CompactTextString(m) }
-func (*GetPartsReq) ProtoMessage()    {}
-func (*GetPartsReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_skunk_ac692200d84155b4, []int{1}
+func (m *GetDataReq) Reset()         { *m = GetDataReq{} }
+func (m *GetDataReq) String() string { return proto.CompactTextString(m) }
+func (*GetDataReq) ProtoMessage()    {}
+func (*GetDataReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_skunk_30880a7d9cd8b144, []int{1}
 }
-func (m *GetPartsReq) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetPartsReq.Unmarshal(m, b)
+func (m *GetDataReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDataReq.Unmarshal(m, b)
 }
-func (m *GetPartsReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetPartsReq.Marshal(b, m, deterministic)
+func (m *GetDataReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDataReq.Marshal(b, m, deterministic)
 }
-func (dst *GetPartsReq) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetPartsReq.Merge(dst, src)
+func (dst *GetDataReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDataReq.Merge(dst, src)
 }
-func (m *GetPartsReq) XXX_Size() int {
-	return xxx_messageInfo_GetPartsReq.Size(m)
+func (m *GetDataReq) XXX_Size() int {
+	return xxx_messageInfo_GetDataReq.Size(m)
 }
-func (m *GetPartsReq) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetPartsReq.DiscardUnknown(m)
+func (m *GetDataReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDataReq.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetPartsReq proto.InternalMessageInfo
+var xxx_messageInfo_GetDataReq proto.InternalMessageInfo
 
-func (m *GetPartsReq) GetRoundId() int64 {
+func (m *GetDataReq) GetRoundId() int64 {
 	if m != nil {
 		return m.RoundId
 	}
 	return 0
 }
 
-func (m *GetPartsReq) GetPlayer() string {
+func (m *GetDataReq) GetPlayer() string {
 	if m != nil {
 		return m.Player
 	}
 	return ""
 }
 
-type GetPartsRes struct {
-	Part                 *Part    `protobuf:"bytes,1,opt,name=part,proto3" json:"part,omitempty"`
+type GetDataRes struct {
+	Part                 []*Part  `protobuf:"bytes,1,rep,name=part,proto3" json:"part,omitempty"`
 	Rank                 int64    `protobuf:"varint,2,opt,name=rank,proto3" json:"rank,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetPartsRes) Reset()         { *m = GetPartsRes{} }
-func (m *GetPartsRes) String() string { return proto.CompactTextString(m) }
-func (*GetPartsRes) ProtoMessage()    {}
-func (*GetPartsRes) Descriptor() ([]byte, []int) {
-	return fileDescriptor_skunk_ac692200d84155b4, []int{2}
+func (m *GetDataRes) Reset()         { *m = GetDataRes{} }
+func (m *GetDataRes) String() string { return proto.CompactTextString(m) }
+func (*GetDataRes) ProtoMessage()    {}
+func (*GetDataRes) Descriptor() ([]byte, []int) {
+	return fileDescriptor_skunk_30880a7d9cd8b144, []int{2}
 }
-func (m *GetPartsRes) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetPartsRes.Unmarshal(m, b)
+func (m *GetDataRes) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDataRes.Unmarshal(m, b)
 }
-func (m *GetPartsRes) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetPartsRes.Marshal(b, m, deterministic)
+func (m *GetDataRes) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDataRes.Marshal(b, m, deterministic)
 }
-func (dst *GetPartsRes) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetPartsRes.Merge(dst, src)
+func (dst *GetDataRes) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDataRes.Merge(dst, src)
 }
-func (m *GetPartsRes) XXX_Size() int {
-	return xxx_messageInfo_GetPartsRes.Size(m)
+func (m *GetDataRes) XXX_Size() int {
+	return xxx_messageInfo_GetDataRes.Size(m)
 }
-func (m *GetPartsRes) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetPartsRes.DiscardUnknown(m)
+func (m *GetDataRes) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDataRes.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetPartsRes proto.InternalMessageInfo
+var xxx_messageInfo_GetDataRes proto.InternalMessageInfo
 
-func (m *GetPartsRes) GetPart() *Part {
+func (m *GetDataRes) GetPart() []*Part {
 	if m != nil {
 		return m.Part
 	}
 	return nil
 }
 
-func (m *GetPartsRes) GetRank() int64 {
+func (m *GetDataRes) GetRank() int64 {
 	if m != nil {
 		return m.Rank
 	}
@@ -160,7 +160,7 @@ func (m *Part) Reset()         { *m = Part{} }
 func (m *Part) String() string { return proto.CompactTextString(m) }
 func (*Part) ProtoMessage()    {}
 func (*Part) Descriptor() ([]byte, []int) {
-	return fileDescriptor_skunk_ac692200d84155b4, []int{3}
+	return fileDescriptor_skunk_30880a7d9cd8b144, []int{3}
 }
 func (m *Part) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Part.Unmarshal(m, b)
@@ -210,8 +210,8 @@ func (m *Part) GetPart() int64 {
 
 func init() {
 	proto.RegisterType((*Empty)(nil), "skunkpb.Empty")
-	proto.RegisterType((*GetPartsReq)(nil), "skunkpb.GetPartsReq")
-	proto.RegisterType((*GetPartsRes)(nil), "skunkpb.GetPartsRes")
+	proto.RegisterType((*GetDataReq)(nil), "skunkpb.GetDataReq")
+	proto.RegisterType((*GetDataRes)(nil), "skunkpb.GetDataRes")
 	proto.RegisterType((*Part)(nil), "skunkpb.Part")
 }
 
@@ -228,7 +228,7 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type SkunkClient interface {
 	Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
-	GetPart(ctx context.Context, in *GetPartsReq, opts ...grpc.CallOption) (*GetPartsRes, error)
+	GetData(ctx context.Context, in *GetDataReq, opts ...grpc.CallOption) (*GetDataRes, error)
 	Stream(ctx context.Context, in *reflexpb.StreamRequest, opts ...grpc.CallOption) (Skunk_StreamClient, error)
 }
 
@@ -249,9 +249,9 @@ func (c *skunkClient) Ping(ctx context.Context, in *Empty, opts ...grpc.CallOpti
 	return out, nil
 }
 
-func (c *skunkClient) GetPart(ctx context.Context, in *GetPartsReq, opts ...grpc.CallOption) (*GetPartsRes, error) {
-	out := new(GetPartsRes)
-	err := c.cc.Invoke(ctx, "/skunkpb.Skunk/GetPart", in, out, opts...)
+func (c *skunkClient) GetData(ctx context.Context, in *GetDataReq, opts ...grpc.CallOption) (*GetDataRes, error) {
+	out := new(GetDataRes)
+	err := c.cc.Invoke(ctx, "/skunkpb.Skunk/GetData", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -293,7 +293,7 @@ func (x *skunkStreamClient) Recv() (*reflexpb.Event, error) {
 // SkunkServer is the server API for Skunk service.
 type SkunkServer interface {
 	Ping(context.Context, *Empty) (*Empty, error)
-	GetPart(context.Context, *GetPartsReq) (*GetPartsRes, error)
+	GetData(context.Context, *GetDataReq) (*GetDataRes, error)
 	Stream(*reflexpb.StreamRequest, Skunk_StreamServer) error
 }
 
@@ -319,20 +319,20 @@ func _Skunk_Ping_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Skunk_GetPart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetPartsReq)
+func _Skunk_GetData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDataReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SkunkServer).GetPart(ctx, in)
+		return srv.(SkunkServer).GetData(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/skunkpb.Skunk/GetPart",
+		FullMethod: "/skunkpb.Skunk/GetData",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SkunkServer).GetPart(ctx, req.(*GetPartsReq))
+		return srv.(SkunkServer).GetData(ctx, req.(*GetDataReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -367,8 +367,8 @@ var _Skunk_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Skunk_Ping_Handler,
 		},
 		{
-			MethodName: "GetPart",
-			Handler:    _Skunk_GetPart_Handler,
+			MethodName: "GetData",
+			Handler:    _Skunk_GetData_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
@@ -381,27 +381,27 @@ var _Skunk_serviceDesc = grpc.ServiceDesc{
 	Metadata: "skunk.proto",
 }
 
-func init() { proto.RegisterFile("skunk.proto", fileDescriptor_skunk_ac692200d84155b4) }
+func init() { proto.RegisterFile("skunk.proto", fileDescriptor_skunk_30880a7d9cd8b144) }
 
-var fileDescriptor_skunk_ac692200d84155b4 = []byte{
-	// 297 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x91, 0x5f, 0x4f, 0xb3, 0x30,
-	0x14, 0xc6, 0x07, 0x63, 0xf0, 0xbe, 0x87, 0x38, 0x93, 0x13, 0xa3, 0x93, 0xab, 0xd9, 0x2b, 0x2e,
-	0x4c, 0x67, 0x66, 0xa2, 0xb7, 0x5e, 0xb8, 0x18, 0xef, 0x96, 0xee, 0xda, 0x18, 0x90, 0x3a, 0x09,
-	0x50, 0xba, 0x52, 0x8c, 0xfb, 0x3a, 0x7e, 0x52, 0x43, 0x41, 0x44, 0xa3, 0x57, 0x3d, 0xcf, 0xf9,
-	0xf3, 0xf4, 0xd7, 0x53, 0xf0, 0xab, 0xac, 0x16, 0x19, 0x95, 0xaa, 0xd4, 0x25, 0x7a, 0x46, 0xc8,
-	0x38, 0x38, 0xdf, 0xa6, 0xfa, 0xa5, 0x8e, 0xe9, 0x53, 0x59, 0x2c, 0xf2, 0x5a, 0x94, 0x0b, 0xc5,
-	0x9f, 0x73, 0xfe, 0xd6, 0x1d, 0x32, 0xee, 0x82, 0x76, 0x8c, 0x78, 0x30, 0x59, 0x15, 0x52, 0xef,
-	0xc9, 0x0d, 0xf8, 0x77, 0x5c, 0xaf, 0x23, 0xa5, 0x2b, 0xc6, 0x77, 0x78, 0x0a, 0xff, 0x54, 0x59,
-	0x8b, 0xe4, 0x31, 0x4d, 0x66, 0xd6, 0xdc, 0x0a, 0xc7, 0xcc, 0x33, 0xfa, 0x3e, 0xc1, 0x63, 0x70,
-	0x65, 0x1e, 0xed, 0xb9, 0x9a, 0xd9, 0x73, 0x2b, 0xfc, 0xcf, 0x3a, 0x45, 0x6e, 0x87, 0x0e, 0x15,
-	0x9e, 0x81, 0x23, 0x23, 0xa5, 0xcd, 0xb4, 0xbf, 0x3c, 0xa0, 0x1d, 0x1f, 0x6d, 0x1a, 0x98, 0x29,
-	0x21, 0x82, 0xa3, 0x22, 0x91, 0x19, 0x9f, 0x31, 0x33, 0x31, 0x79, 0x00, 0xa7, 0xe9, 0xc0, 0x29,
-	0xd8, 0xfd, 0xd5, 0x76, 0x9a, 0x7c, 0x03, 0xb2, 0xff, 0x02, 0x1a, 0x0f, 0x81, 0x1a, 0x7b, 0x43,
-	0xe0, 0xb4, 0xf6, 0x4d, 0xbc, 0x7c, 0xb7, 0x60, 0xb2, 0x69, 0x48, 0x30, 0x04, 0x67, 0x9d, 0x8a,
-	0x2d, 0x4e, 0x7b, 0x32, 0xb3, 0x88, 0xe0, 0x87, 0x26, 0x23, 0xbc, 0x06, 0xaf, 0x7b, 0x18, 0x1e,
-	0xf5, 0xc5, 0xc1, 0xb2, 0x82, 0xdf, 0xb2, 0x15, 0x19, 0xe1, 0x15, 0xb8, 0x1b, 0xad, 0x78, 0x54,
-	0xe0, 0x09, 0xfd, 0x5c, 0x3f, 0x6d, 0x33, 0x8c, 0xef, 0x6a, 0x5e, 0xe9, 0xe0, 0xf0, 0xab, 0xb0,
-	0x7a, 0xe5, 0x42, 0x93, 0xd1, 0x85, 0x15, 0xbb, 0xe6, 0x6f, 0x2e, 0x3f, 0x02, 0x00, 0x00, 0xff,
-	0xff, 0xc7, 0x72, 0x3a, 0xae, 0xe1, 0x01, 0x00, 0x00,
+var fileDescriptor_skunk_30880a7d9cd8b144 = []byte{
+	// 300 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x91, 0x31, 0x4f, 0xfb, 0x30,
+	0x10, 0xc5, 0xeb, 0x24, 0x6d, 0xfe, 0xff, 0xab, 0x28, 0xd2, 0x21, 0x41, 0xc9, 0x54, 0x3c, 0x65,
+	0x40, 0x2e, 0x2a, 0x82, 0x95, 0x01, 0x2a, 0xc4, 0x56, 0xb9, 0x33, 0x42, 0x0e, 0x31, 0x25, 0x6a,
+	0xeb, 0xb8, 0x8e, 0x83, 0xe8, 0xb7, 0xe1, 0xa3, 0xa2, 0x38, 0x21, 0x2d, 0x08, 0x26, 0xdf, 0xbb,
+	0xb3, 0x9f, 0x7f, 0x7e, 0x86, 0x7e, 0xb1, 0x2c, 0xd5, 0x92, 0x69, 0x93, 0xdb, 0x1c, 0x43, 0x27,
+	0x74, 0x12, 0x9d, 0x2f, 0x32, 0xfb, 0x5a, 0x26, 0xec, 0x39, 0x5f, 0x8f, 0x57, 0xa5, 0xca, 0xc7,
+	0x46, 0xbe, 0xac, 0xe4, 0x7b, 0xb3, 0xe8, 0xa4, 0x29, 0xea, 0x63, 0x34, 0x84, 0xee, 0x74, 0xad,
+	0xed, 0x96, 0xde, 0x00, 0xdc, 0x4b, 0x7b, 0x27, 0xac, 0xe0, 0x72, 0x83, 0xa7, 0xf0, 0xcf, 0xe4,
+	0xa5, 0x4a, 0x9f, 0xb2, 0x74, 0x48, 0x46, 0x24, 0xf6, 0x79, 0xe8, 0xf4, 0x43, 0x8a, 0xc7, 0xd0,
+	0xd3, 0x2b, 0xb1, 0x95, 0x66, 0xe8, 0x8d, 0x48, 0xfc, 0x9f, 0x37, 0x8a, 0xde, 0xee, 0x19, 0x14,
+	0x78, 0x06, 0x81, 0x16, 0xc6, 0x0e, 0xc9, 0xc8, 0x8f, 0xfb, 0x93, 0x03, 0xd6, 0xd0, 0xb1, 0x99,
+	0x30, 0x96, 0xbb, 0x11, 0x22, 0x04, 0x46, 0xa8, 0xa5, 0xb3, 0xf1, 0xb9, 0xab, 0xe9, 0x23, 0x04,
+	0xd5, 0x0e, 0x1c, 0x80, 0xd7, 0xde, 0xec, 0x65, 0xe9, 0x37, 0x1e, 0xef, 0x2f, 0x1e, 0x7f, 0x9f,
+	0xa7, 0xb2, 0x77, 0x04, 0x41, 0x6d, 0x5f, 0xd5, 0x93, 0x0f, 0x02, 0xdd, 0x79, 0x45, 0x82, 0x31,
+	0x04, 0xb3, 0x4c, 0x2d, 0x70, 0xd0, 0x92, 0xb9, 0x18, 0xa2, 0x1f, 0x9a, 0x76, 0xf0, 0x0a, 0xc2,
+	0xe6, 0x5d, 0x78, 0xd4, 0x0e, 0x77, 0x51, 0x45, 0xbf, 0x34, 0x0b, 0xda, 0xc1, 0x6b, 0xe8, 0xcd,
+	0xad, 0x91, 0x62, 0x8d, 0x27, 0xec, 0x2b, 0x7a, 0x56, 0x77, 0xb8, 0xdc, 0x94, 0xb2, 0xb0, 0xd1,
+	0xe1, 0x6e, 0x30, 0x7d, 0x93, 0xca, 0xd2, 0xce, 0x05, 0x49, 0x7a, 0xee, 0x5f, 0x2e, 0x3f, 0x03,
+	0x00, 0x00, 0xff, 0xff, 0x5e, 0x1b, 0x1c, 0x0b, 0xdd, 0x01, 0x00, 0x00,
 }
