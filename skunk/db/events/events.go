@@ -9,7 +9,7 @@ import (
 )
 
 // Events reflex events table
-var events = rsql.NewEventsTableInt("skunk_events")
+var events = rsql.NewEventsTableInt("events")
 
 // Insert inserts a reflex event into the onfido events table
 // and returns a notify function or error.
