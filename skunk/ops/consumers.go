@@ -1,14 +1,16 @@
 package ops
 
-//import (
-//	"context"
-//
-//	"github.com/luno/fate"
-//)
+import (
+	"context"
+	"github.com/luno/fate"
+	"github.com/luno/reflex"
+)
 
-//func makeConsumeCloseAccount(b Backends) func(ctx context.Context, fate fate.Fate, event ) error {
-//	return func(ctx context.Context, fate fate.Fate, e *) error {
-//
-//		return fate.Tempt()
-//	}
-//}
+func makeConsume(b Backends) reflex.Consumer {
+	fn := func(ctx context.Context, fate fate.Fate, e *reflex.Event) error {
+
+		return fate.Tempt()
+	}
+
+	return reflex.NewConsumer(reflex.ConsumerName("skunk_consumer"), fn)
+}
