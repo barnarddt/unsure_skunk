@@ -118,4 +118,6 @@ func collectPeerParts(ctx context.Context, b Backends, c skunk.Client, e *reflex
 	if err != nil {
 		return errors.Wrap(err, "failed to create part")
 	}
+
+	return nil
 }
