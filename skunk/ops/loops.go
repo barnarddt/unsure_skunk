@@ -20,7 +20,7 @@ func StartLoops(b Backends) {
 func consumePeerEvents(b Backends, peer skunk.Client) {
 	consumable := reflex.NewConsumable(peer.Stream,
 		cursors.ToStore(b.SkunkDB().DB))
-	consumer := Dummy
+	consumer := Dummy(b)
 	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }
 
