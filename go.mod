@@ -1,4 +1,4 @@
-module github.com/barnarddt/unsure_skunk
+module unsure_skunk
 
 go 1.12
 

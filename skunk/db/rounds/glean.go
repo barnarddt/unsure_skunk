@@ -1,6 +1,6 @@
 package rounds
 
-import "github.com/barnarddt/unsure_skunk/skunk"
+import "unsure_skunk/skunk"
 
 //go:generate glean -table=rounds
 
