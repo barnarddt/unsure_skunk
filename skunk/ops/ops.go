@@ -162,11 +162,33 @@ func collectPeerParts(ctx context.Context, b Backends, c skunk.Client, e *reflex
 	return nil
 }
 
-func submitNext(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event) error {
-	// (*skunk.PartType, error)
-	part, err := parts.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
+func updateSubmitState(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event) error {
+	r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
 	if err != nil {
-		return errors.Wrap(err, "failed parts lookup")
+		return errors.Wrap(err, "failed round lookup")
+	}
+
+	p, err := parts.List(ctx, b.SkunkDB().DB, r.ExternalID)
+	if err != nil {
+		return errors.Wrap(err, "failed list all parts")
+	}
+
+	var lowestRank int64 = -1
+	var lowestPlayer string
+
+	for _, pr := range p {
+		if lowestRank == -1 {
+			lowestRank = pr.Rank
+		}
+
+		if pr.Rank < lowestRank {
+			lowestRank = pr.Rank
+			lowestPlayer = pr.Player
+		}
+	}
+
+	if lowestPlayer == *player {
+
 	}
 
 	return nil
