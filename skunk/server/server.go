@@ -42,6 +42,6 @@ func (srv *Server) Stream(req *reflexpb.StreamRequest, ss pb.Skunk_StreamServer)
 	return srv.rserver.Stream(srv.stream, req, ss)
 }
 
-func (srv *Server) GetPart(ctx context.Context, req *pb.GetPartsReq) (*pb.GetPartsRes, error) {
+func (srv *Server) GetData(ctx context.Context, req *pb.GetDataReq) (*pb.GetDataRes, error) {
 	return nil, errors.New("method not implemented")
 }
