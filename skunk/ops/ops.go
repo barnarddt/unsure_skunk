@@ -27,24 +27,18 @@ func joinMatches(b Backends) reflex.Consumer {
 			return fate.Tempt()
 		}
 
-		// Default nextRoundID will be 0, i.e. The first round.
-		var nextRoundID int64
-
-		// Lookup the most recent round.
-		lastMatch, err := rounds.LookupLastCompletedRound(ctx,
-			b.SkunkDB().ReplicaOrMaster())
-		if err == nil { // Found a completed round, increment the id.
-			nextRoundID = lastMatch.ExternalID + 1
-		} else if !errors.Is(err, sql.ErrNoRows){ // Unexpected error.
-			return errors.Wrap(err, "failed to find last completed round")
+		r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
+		if err != nil {
+			return errors.Wrap(err, "failed to lookup round",
+				j.KV("round", e.ForeignIDInt()))
 		}
 
 		// Join the next round.
 		joined, err := b.EngineClient().JoinRound(ctx, team, *player,
-			nextRoundID)
+			r.ExternalID)
 		if err != nil {
 			return errors.Wrap(err, "failed to join round",
-				j.KV("round", nextRoundID))
+				j.KV("round", r.ExternalID))
 		}
 
 		// If joining was unsuccessful, skip the round.
@@ -54,7 +48,7 @@ func joinMatches(b Backends) reflex.Consumer {
 
 		// Join was successful, update your local state.
 		err = rounds.ShiftToJoined(ctx, b.SkunkDB().ReplicaOrMaster(),
-			e.ForeignIDInt(), nextRoundID)
+			e.ForeignIDInt())
 		if err != nil {
 			return errors.Wrap(err, "failed to update state to joined",
 				j.KV("round", e.ForeignIDInt()))

@@ -15,16 +15,15 @@ func LookupLastCompletedRound(ctx context.Context, dbc *sql.DB) (*skunk.Round,
 	return lookupWhere(ctx, dbc, "order by external_id desc limit 1")
 }
 
-
-func ShiftToJoined(ctx context.Context, dbc *sql.DB, roundID, extID int64) error {
-	r, err := Lookup(ctx, dbc, roundID)
+func ShiftToJoined(ctx context.Context, dbc *sql.DB, id int64) error {
+	r, err := Lookup(ctx, dbc, id)
 	if err != nil {
 		return errors.Wrap(err, "failed to lookup round",
-			j.KV("round", roundID))
+			j.KV("round", id))
 	}
 
 	err = roundFSM.Update(ctx, dbc, r.Status, skunk.RoundStatusJoined,
-		joined{ID: roundID, ExternalID: extID})
+		joined{ID: id})
 	if err != nil {
 		return errors.Wrap(err, "failed to shift to joined")
 	}
