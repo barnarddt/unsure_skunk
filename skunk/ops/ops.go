@@ -20,6 +20,10 @@ const (
 	team = "skunkworx"
 )
 
+func GetPlayerName() string {
+	return *player
+}
+
 func joinMatches(b Backends) reflex.Consumer {
 	f := func(ctx context.Context, f fate.Fate, e *reflex.Event) error {
 		// Skip uninteresting states.
