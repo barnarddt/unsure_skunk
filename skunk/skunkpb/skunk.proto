@@ -1,9 +1,11 @@
 syntax = "proto3";
 package skunkpb;
 
+import "github.com/luno/reflex/reflexpb/reflex.proto";
 
 service Skunk {
   rpc Ping (Empty) returns (Empty) {}
+  rpc Stream (reflexpb.StreamRequest) returns (stream reflexpb.Event) {}
 }
 
 message Empty {}

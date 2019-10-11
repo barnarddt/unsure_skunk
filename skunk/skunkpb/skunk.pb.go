@@ -6,6 +6,7 @@ package skunkpb
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
+import reflexpb "github.com/luno/reflex/reflexpb"
 
 import (
 	context "golang.org/x/net/context"
@@ -33,7 +34,7 @@ func (m *Empty) Reset()         { *m = Empty{} }
 func (m *Empty) String() string { return proto.CompactTextString(m) }
 func (*Empty) ProtoMessage()    {}
 func (*Empty) Descriptor() ([]byte, []int) {
-	return fileDescriptor_skunk_3b329ef22aed1e2c, []int{0}
+	return fileDescriptor_skunk_ace0aea06e33c71a, []int{0}
 }
 func (m *Empty) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Empty.Unmarshal(m, b)
@@ -70,6 +71,7 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type SkunkClient interface {
 	Ping(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+	Stream(ctx context.Context, in *reflexpb.StreamRequest, opts ...grpc.CallOption) (Skunk_StreamClient, error)
 }
 
 type skunkClient struct {
@@ -89,9 +91,42 @@ func (c *skunkClient) Ping(ctx context.Context, in *Empty, opts ...grpc.CallOpti
 	return out, nil
 }
 
+func (c *skunkClient) Stream(ctx context.Context, in *reflexpb.StreamRequest, opts ...grpc.CallOption) (Skunk_StreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_Skunk_serviceDesc.Streams[0], "/skunkpb.Skunk/Stream", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &skunkStreamClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Skunk_StreamClient interface {
+	Recv() (*reflexpb.Event, error)
+	grpc.ClientStream
+}
+
+type skunkStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *skunkStreamClient) Recv() (*reflexpb.Event, error) {
+	m := new(reflexpb.Event)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // SkunkServer is the server API for Skunk service.
 type SkunkServer interface {
 	Ping(context.Context, *Empty) (*Empty, error)
+	Stream(*reflexpb.StreamRequest, Skunk_StreamServer) error
 }
 
 func RegisterSkunkServer(s *grpc.Server, srv SkunkServer) {
@@ -116,6 +151,27 @@ func _Skunk_Ping_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Skunk_Stream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(reflexpb.StreamRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(SkunkServer).Stream(m, &skunkStreamServer{stream})
+}
+
+type Skunk_StreamServer interface {
+	Send(*reflexpb.Event) error
+	grpc.ServerStream
+}
+
+type skunkStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *skunkStreamServer) Send(m *reflexpb.Event) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 var _Skunk_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "skunkpb.Skunk",
 	HandlerType: (*SkunkServer)(nil),
@@ -125,18 +181,28 @@ var _Skunk_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Skunk_Ping_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Stream",
+			Handler:       _Skunk_Stream_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "skunk.proto",
 }
 
-func init() { proto.RegisterFile("skunk.proto", fileDescriptor_skunk_3b329ef22aed1e2c) }
+func init() { proto.RegisterFile("skunk.proto", fileDescriptor_skunk_ace0aea06e33c71a) }
 
-var fileDescriptor_skunk_3b329ef22aed1e2c = []byte{
-	// 85 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_skunk_ace0aea06e33c71a = []byte{
+	// 154 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2e, 0xce, 0x2e, 0xcd,
-	0xcb, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x07, 0x73, 0x0a, 0x92, 0x94, 0xd8, 0xb9,
-	0x58, 0x5d, 0x73, 0x0b, 0x4a, 0x2a, 0x8d, 0x0c, 0xb9, 0x58, 0x83, 0x41, 0x62, 0x42, 0x1a, 0x5c,
-	0x2c, 0x01, 0x99, 0x79, 0xe9, 0x42, 0x7c, 0x7a, 0x50, 0x35, 0x7a, 0x60, 0x05, 0x52, 0x68, 0x7c,
-	0x25, 0x86, 0x24, 0x36, 0xb0, 0x59, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x15, 0x52, 0x4d,
-	0xd3, 0x5a, 0x00, 0x00, 0x00,
+	0xcb, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x07, 0x73, 0x0a, 0x92, 0xa4, 0x74, 0xd2,
+	0x33, 0x4b, 0x32, 0x4a, 0x93, 0xf4, 0x92, 0xf3, 0x73, 0xf5, 0x73, 0x4a, 0xf3, 0xf2, 0xf5, 0x8b,
+	0x52, 0xd3, 0x72, 0x52, 0x2b, 0xa0, 0x54, 0x41, 0x12, 0x94, 0x01, 0xd1, 0xa6, 0xc4, 0xce, 0xc5,
+	0xea, 0x9a, 0x5b, 0x50, 0x52, 0x69, 0x94, 0xc9, 0xc5, 0x1a, 0x0c, 0x32, 0x41, 0x48, 0x83, 0x8b,
+	0x25, 0x20, 0x33, 0x2f, 0x5d, 0x88, 0x4f, 0x0f, 0x6a, 0xa2, 0x1e, 0x58, 0x81, 0x14, 0x1a, 0x5f,
+	0x89, 0x41, 0xc8, 0x8c, 0x8b, 0x2d, 0xb8, 0xa4, 0x28, 0x35, 0x31, 0x57, 0x48, 0x5c, 0x0f, 0x66,
+	0xba, 0x1e, 0x44, 0x24, 0x28, 0xb5, 0xb0, 0x34, 0xb5, 0xb8, 0x44, 0x8a, 0x1f, 0x21, 0xe1, 0x5a,
+	0x96, 0x9a, 0x57, 0xa2, 0xc4, 0x60, 0xc0, 0x98, 0xc4, 0x06, 0xb6, 0xda, 0x18, 0x10, 0x00, 0x00,
+	0xff, 0xff, 0xae, 0xfa, 0xd8, 0x8e, 0xc0, 0x00, 0x00, 0x00,
 }

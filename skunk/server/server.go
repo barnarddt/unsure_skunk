@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"github.com/luno/reflex/reflexpb"
 
 	"github.com/luno/reflex"
 	"unsure_skunk/skunk/db/events"
@@ -32,4 +33,8 @@ func (srv *Server) Stop() {
 
 func (srv *Server) Ping(ctx context.Context, req *pb.Empty) (*pb.Empty, error) {
 	return req, nil
+}
+
+func (srv *Server) Stream(req *reflexpb.StreamRequest, ss pb.Skunk_StreamServer) error {
+	return srv.rserver.Stream(srv.stream, req, ss)
 }
