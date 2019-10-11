@@ -4,11 +4,10 @@ import (
 	"flag"
 	"net/http"
 	"unsure_skunk/skunk/ops"
+	"unsure_skunk/skunk/server"
+	"unsure_skunk/skunk/skunkpb"
 
 	"github.com/corverroos/unsure"
-	"github.com/corverroos/unsure/engine/enginepb"
-
-
 	"unsure_skunk/skunk/state"
 
 	"github.com/luno/jettison/errors"
@@ -43,11 +42,11 @@ func serveGRPCForever(s *state.State) {
 		unsure.Fatal(errors.Wrap(err, "new grpctls server"))
 	}
 
-	engineSrv := engine_server.New(s)
-	enginepb.RegisterEngineServer(grpcServer.GRPCServer(), engineSrv)
+	skunkSrv := server.New(s)
+	skunkpb.RegisterSkunkServer(grpcServer.GRPCServer(), skunkSrv)
 
 	unsure.RegisterNoErr(func() {
-		engineSrv.Stop()
+		skunkSrv.Stop()
 		grpcServer.Stop()
 	})
 

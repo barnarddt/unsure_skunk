@@ -8,7 +8,7 @@ import (
 
 //go:generate genbackendsimpl
 type Backends interface {
-	GetPeers() []skunk.Client
 	EngineClient() engine.Client
 	SkunkDB() *db.SkunkDB
+	GetPeers() []skunk.Client
 }
