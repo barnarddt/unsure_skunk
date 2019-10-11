@@ -6,6 +6,7 @@ import (
 	"github.com/luno/reflex"
 	"github.com/pkg/errors"
 	"unsure_skunk/skunk"
+	"unsure_skunk/skunk/db/parts"
 	"unsure_skunk/skunk/db/rounds"
 )
 
@@ -28,7 +29,10 @@ func makeConsume(b Backends, c skunk.Client) reflex.Consumer {
 				return errors.Wrap(err, "failed to get data over rpc")
 			}
 
-
+			err = parts.Create(ctx, b.SkunkDB().DB, part[0], rank)
+			if err != nil {
+				return errors.Wrap(err, "failed to create part")
+			}
 		}
 
 		return fate.Tempt()
