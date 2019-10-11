@@ -70,6 +70,7 @@ type Round struct {
 	Player string
 	// Current status for the unique Peer.
 	Status    RoundStatus
+	Submitted int64
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

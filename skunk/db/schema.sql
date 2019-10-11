@@ -23,6 +23,7 @@ create table rounds (
   player varchar(255),                      -- "Skunk#1"
   rank int not null,                        -- 1
   status int not null,                      -- StatusCollected(1)
+  submitted int not null,
 
   created_at datetime(3) not null,
   updated_at datetime(3) not null,

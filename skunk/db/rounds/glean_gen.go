@@ -8,7 +8,7 @@ import (
 	"unsure_skunk/skunk"
 )
 
-const cols = " `id`, `external_id`, `player`, `status`, `created_at`, `updated_at` "
+const cols = " `id`, `external_id`, `player`, `status`, `submitted`, `created_at`, `updated_at` "
 const selectPrefix = "select " + cols + " from rounds where "
 
 func Lookup(ctx context.Context, dbc dbc, id int64) (*skunk.Round, error) {
@@ -46,7 +46,7 @@ func listWhere(ctx context.Context, dbc dbc, where string, args ...interface{}) 
 func scan(row row) (*skunk.Round, error) {
 	var g glean
 
-	err := row.Scan(&g.ID, &g.ExternalID, &g.Player, &g.Status, &g.CreatedAt, &g.UpdatedAt)
+	err := row.Scan(&g.ID, &g.ExternalID, &g.Player, &g.Status, &g.Submitted, &g.CreatedAt, &g.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}
@@ -56,6 +56,7 @@ func scan(row row) (*skunk.Round, error) {
 		ExternalID: g.ExternalID,
 		Player:     g.Player,
 		Status:     g.Status,
+		Submitted:  g.Submitted,
 		CreatedAt:  g.CreatedAt,
 		UpdatedAt:  g.UpdatedAt,
 	}, nil

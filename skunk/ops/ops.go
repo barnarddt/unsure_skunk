@@ -3,6 +3,7 @@ package ops
 import (
 	"context"
 	"flag"
+	"strings"
 
 	"github.com/luno/fate"
 	"github.com/luno/jettison/errors"
@@ -162,35 +163,32 @@ func collectPeerParts(ctx context.Context, b Backends, c skunk.Client, e *reflex
 	return nil
 }
 
-func updateSubmitState(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event) error {
+func maybeSubmitParts(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event) error {
 	r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
 	if err != nil {
 		return errors.Wrap(err, "failed round lookup")
 	}
 
-	p, err := parts.List(ctx, b.SkunkDB().DB, r.ExternalID)
+	pl, err := parts.List(ctx, b.SkunkDB().DB, r.ExternalID)
 	if err != nil {
 		return errors.Wrap(err, "failed list all parts")
 	}
 
-	var lowestRank int64 = -1
-	var lowestPlayer string
-
-	for _, pr := range p {
-		if lowestRank == -1 {
-			lowestRank = pr.Rank
-		}
-
-		if pr.Rank < lowestRank {
-			lowestRank = pr.Rank
-			lowestPlayer = pr.Player
+	shouldSubmit := false
+	for i, p := range pl {
+		if i == int(r.Submitted) && strings.EqualFold(p.Player, *player) {
+			shouldSubmit = true
 		}
 	}
 
-	if lowestPlayer == *player {
-		if err := rounds.ShiftToSubmit(ctx, b.SkunkDB().DB, r.ID); err != nil {
-			return errors.Wrap(err, "failed to shift to submit")
-		}
+	if !shouldSubmit {
+		return rounds.IncrementSubmitted(ctx, b.SkunkDB().DB, r.ID)
+	}
+
+	err = rounds.ShiftToSubmit(ctx, b.SkunkDB().DB, r.ID)
+	if err != nil {
+		return errors.Wrap(err, "failed to update state to submit",
+			j.KV("round", r.ID))
 	}
 
 	return nil

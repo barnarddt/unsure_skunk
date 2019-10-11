@@ -13,7 +13,7 @@ var roundFSM = shift.NewFSM(events.GetTable()).
 	Insert(skunk.RoundStatusJoin, ready{}, skunk.RoundStatusJoined).
 	Update(skunk.RoundStatusJoined, joined{}, skunk.RoundStatusCollect).
 	Update(skunk.RoundStatusCollect, empty{}, skunk.RoundStatusCollected).
-	Update(skunk.RoundStatusCollected, collected{}, skunk.RoundStatusSubmit).
+	Update(skunk.RoundStatusCollected, empty{}, skunk.RoundStatusSubmit).
 	Update(skunk.RoundStatusSubmit, empty{}, skunk.RoundStatusSubmitted).
 	Update(skunk.RoundStatusSubmitted, empty{}, skunk.RoundStatusSuccess,
 		skunk.RoundStatusFailed).
@@ -23,6 +23,7 @@ var roundFSM = shift.NewFSM(events.GetTable()).
 type ready struct {
 	Player string
 	ExternalID int64
+	Submitted int64
 }
 
 type joined struct {

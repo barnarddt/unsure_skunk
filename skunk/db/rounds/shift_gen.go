@@ -30,6 +30,9 @@ func (一 ready) Insert(ctx context.Context, tx *sql.Tx,st shift.Status) (int64,
 	q.WriteString(", `external_id`=?")
 	args = append(args, 一.ExternalID)
 
+	q.WriteString(", `submitted`=?")
+	args = append(args, 一.Submitted)
+
 	res, err := tx.ExecContext(ctx, q.String(), args...)
 	if err != nil {
 		return 0, err

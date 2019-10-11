@@ -26,7 +26,7 @@ func GetPart(ctx context.Context, dbc *sql.DB, roundID int64, player string) (*s
 
 func Create(ctx context.Context, tx *sql.Tx, part skunk.PartType) error {
 	_, err := tx.ExecContext(ctx, "insert into parts set round_id=?, " +
-		"player=?, rank=?, part=?, created_at=now()", part.RoundID,
+		"player=?, rank=?, part=?, submitted=false, created_at=now()", part.RoundID,
 		part.Player, part.Rank, part.Part)
 	if err != nil {
 		return errors.Wrap(err, "failed to insert part")
@@ -62,5 +62,5 @@ func List(ctx context.Context, dbc *sql.DB, roundID int64) ([]skunk.PartType, er
 		return nil, ErrURoundIDInvalid
 	}
 
-	return listWhere(ctx, dbc, "round_id=?", roundID)
+	return listWhere(ctx, dbc, "round_id=? order by rank asc", roundID)
 }
