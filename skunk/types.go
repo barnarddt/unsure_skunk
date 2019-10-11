@@ -68,8 +68,6 @@ type Round struct {
 	ExternalID int64
 	// Unique name for each Peer.
 	Player string
-	// Rank for the Peer as provided by Engine.
-	Rank int
 	// Current status for the unique Peer.
 	Status    RoundStatus
 	CreatedAt time.Time
