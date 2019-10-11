@@ -60,7 +60,6 @@ func joinMatches(b Backends) reflex.Consumer {
 	return reflex.NewConsumer(skunk.ConsumerJoinRounds, f)
 }
 
-<<<<<<< HEAD
 func collectParts(b Backends) reflex.Consumer {
 	f := func(ctx context.Context, f fate.Fate, e *reflex.Event) error {
 		// Skip uninteresting states.
