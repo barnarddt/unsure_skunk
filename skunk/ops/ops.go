@@ -123,6 +123,9 @@ func LookUpData(ctx context.Context, b Backends, round int64) ([]skunk.PartType,
 
 func collectPeerParts(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event) error {
 	r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
+	if err != nil {
+		return errors.Wrap(err, "failed round lookup")
+	}
 
 	part, err := c.GetData(ctx, r.ExternalID)
 	if err != nil {
@@ -137,6 +140,12 @@ func collectPeerParts(ctx context.Context, b Backends, c skunk.Client, e *reflex
 	return nil
 }
 
-func isLeader() bool {
-	return false
+func submitNext(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event) error {
+	// (*skunk.PartType, error)
+	part, err := parts.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
+	if err != nil {
+		return errors.Wrap(err, "failed parts lookup")
+	}
+
+	return nil
 }
