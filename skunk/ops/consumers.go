@@ -2,11 +2,10 @@ package ops
 
 import (
 	"context"
-	"database/sql"
+	"strconv"
 
 	"github.com/corverroos/unsure/engine"
 	"github.com/luno/fate"
-	"github.com/luno/jettison/errors"
 	"github.com/luno/reflex"
 
 	"unsure_skunk/skunk"
@@ -44,18 +43,13 @@ func makeConsume(b Backends, c skunk.Client) reflex.Consumer {
 func makeEngineConsume(b Backends) reflex.Consumer {
 	fn := func(ctx context.Context, fate fate.Fate, e *reflex.Event) error {
 
-		if engine.EventType(e.Type.ReflexType()) == engine.EventTypeMatchStarted {
-			// Check if a previous round exists
-			var extID int64
-
-			r, err := rounds.LookupLastCompletedRound(ctx, b.SkunkDB().DB)
-			if err == nil {
-				extID = r.ExternalID + 1
-			} else if !errors.Is(err, sql.ErrNoRows) {
+		if reflex.IsType(e.Type, engine.EventTypeRoundJoin) {
+			roundID, err := strconv.ParseInt(e.ForeignID, 10, 64)
+			if err != nil {
 				return err
 			}
 
-			_, err = rounds.ShitToJoin(ctx, b.SkunkDB().DB, GetPlayerName(), extID)
+			_, err = rounds.ShitToJoin(ctx, b.SkunkDB().DB, GetPlayerName(), roundID)
 			if err != nil {
 				return err
 			}
