@@ -188,7 +188,9 @@ func updateSubmitState(ctx context.Context, b Backends, c skunk.Client, e *refle
 	}
 
 	if lowestPlayer == *player {
-
+		if err := rounds.ShiftToSubmit(ctx, b.SkunkDB().DB, r.ID); err != nil {
+			return errors.Wrap(err, "failed to shift to submit")
+		}
 	}
 
 	return nil
