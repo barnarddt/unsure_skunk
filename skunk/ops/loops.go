@@ -24,6 +24,7 @@ func StartLoops(b Backends) {
 
 	go startMatchForever(b)
 	go joinMatchesForever(b)
+	go skipLocalJoinedForever(b)
 	go collectRemotePartsForever(b)
 }
 
@@ -58,6 +59,13 @@ func joinMatchesForever(b Backends) {
 	consumable := reflex.NewConsumable(events.ToStream(b.SkunkDB().DB),
 		cursors.ToStore(b.SkunkDB().DB))
 	consumer := joinMatches(b)
+	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
+}
+
+func skipLocalJoinedForever(b Backends) {
+	consumable := reflex.NewConsumable(events.ToStream(b.SkunkDB().DB),
+		cursors.ToStore(b.SkunkDB().DB))
+	consumer := skipLocalJoined(b)
 	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }
 

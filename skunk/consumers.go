@@ -12,4 +12,9 @@ const (
 	// ConsumerCollectParts consumes local shift events for records moving into
 	// RoundStatusCollect and attempts to collect parts from the engine.
 	ConsumerCollectParts consumer = "collect_parts"
+
+	// ConsumerSkipLocalJoined consumes local shift events for records moving
+	// into RoundStatusJoined and automatically shifts them into
+	// RoundStatusCollect.
+	ConsumerSkipLocalJoined consumer = "skip_local_joined"
 )

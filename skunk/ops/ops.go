@@ -60,6 +60,25 @@ func joinMatches(b Backends) reflex.Consumer {
 	return reflex.NewConsumer(skunk.ConsumerJoinRounds, f)
 }
 
+func skipLocalJoined(b Backends) reflex.Consumer {
+	f := func(ctx context.Context, f fate.Fate, e *reflex.Event) error {
+		// Skip uninteresting states.
+		if !reflex.IsType(e.Type, skunk.RoundStatusJoined) {
+			return fate.Tempt()
+		}
+
+		err := rounds.ShiftToCollect(ctx, b.SkunkDB().DB, e.ForeignIDInt())
+		if err != nil {
+			return errors.Wrap(err, "failed to update state to collect",
+				j.KV("round", e.ForeignIDInt()))
+		}
+
+		return fate.Tempt()
+	}
+
+	return reflex.NewConsumer(skunk.ConsumerSkipLocalJoined, f)
+}
+
 func collectRemoteParts(b Backends) reflex.Consumer {
 	f := func(ctx context.Context, f fate.Fate, e *reflex.Event) error {
 		// Skip uninteresting states.
@@ -100,7 +119,6 @@ func collectRemoteParts(b Backends) reflex.Consumer {
 
 		// Shift the round state to collected.
 		err = rounds.ShiftToCollected(ctx, b.SkunkDB().DB, r.ID)
-
 		if err != nil {
 			return errors.Wrap(err, "failed to update state to collected",
 				j.KV("round", r.ID))
