@@ -10,9 +10,8 @@ import (
 	"github.com/luno/reflex"
 
 	"unsure_skunk/skunk"
-	"unsure_skunk/skunk/db/rounds"
 	"unsure_skunk/skunk/db/parts"
-
+	"unsure_skunk/skunk/db/rounds"
 )
 
 var player = flag.String("player", "skunky", "player name")
@@ -83,10 +82,9 @@ func collectParts(b Backends) reflex.Consumer {
 				j.KV("round", r.ExternalID))
 		}
 
-		
 		// Shift the round state to collected.
 		err = rounds.ShiftToCollected(ctx, b.SkunkDB().DB, r.ID,
-			int64(parts.Rank))
+			int64(pl.Rank))
 		if err != nil {
 			return errors.Wrap(err, "failed to update state to collected",
 				j.KV("round", r.ID))

@@ -75,9 +75,10 @@ type Round struct {
 }
 
 type PartType struct {
-	ID      int64
-	RoundID int64
-	Player  string
-	Part    int64
-	Rank    int64
+	ID        int64
+	RoundID   int64
+	Player    string
+	Part      int64
+	Rank      int64
+	CreatedAt time.Time
 }
