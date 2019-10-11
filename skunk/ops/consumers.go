@@ -12,5 +12,5 @@ func makeConsume(b Backends) reflex.Consumer {
 		return fate.Tempt()
 	}
 
-	return reflex.NewConsumer(reflex.ConsumerName("generic"), fn)
+	return reflex.NewConsumer(reflex.ConsumerName("skunk_consumer"), fn)
 }
