@@ -3,7 +3,6 @@ package ops
 import (
 	"context"
 	"flag"
-	"unsure_skunk/skunk/db/parts"
 
 	"github.com/luno/fate"
 	"github.com/luno/jettison/errors"
@@ -12,6 +11,8 @@ import (
 
 	"unsure_skunk/skunk"
 	"unsure_skunk/skunk/db/rounds"
+	"unsure_skunk/skunk/db/parts"
+
 )
 
 var player = flag.String("player", "skunky", "player name")
@@ -75,15 +76,14 @@ func collectParts(b Backends) reflex.Consumer {
 		}
 
 		// Attempt to collect parts from the engine.
-		parts, err := b.EngineClient().CollectRound(ctx, team, *player,
+		pl, err := b.EngineClient().CollectRound(ctx, team, *player,
 			r.ExternalID)
 		if err != nil {
 			return errors.Wrap(err, "failed to collect parts for round",
 				j.KV("round", r.ExternalID))
 		}
 
-		// TODO(Nick): Insert the parts.
-
+		
 		// Shift the round state to collected.
 		err = rounds.ShiftToCollected(ctx, b.SkunkDB().DB, r.ID,
 			int64(parts.Rank))
