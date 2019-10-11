@@ -24,3 +24,12 @@ func GetPart(ctx context.Context, dbc *sql.DB, roundID int64, player string) (*s
 
 	return lookupWhere(ctx, dbc, "round_id=? and player=?", roundID, player)
 }
+
+func InsertPart(ctx context.Context, dbc *sql.DB, part skunk.PartType, rank int64) error {
+	_, err := dbc.Exec("insert into parts set round_id=?, player=?, part=?, created_at=?", part.RoundID, part.Player, part.Part)
+	if err != nil {
+		return errors.Wrap(err, "failed to insert part")
+	}
+
+	return nil
+}

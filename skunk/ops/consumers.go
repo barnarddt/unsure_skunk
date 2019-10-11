@@ -27,6 +27,8 @@ func makeConsume(b Backends, c skunk.Client) reflex.Consumer {
 			if err != nil {
 				return errors.Wrap(err, "failed to get data over rpc")
 			}
+
+
 		}
 
 		return fate.Tempt()
