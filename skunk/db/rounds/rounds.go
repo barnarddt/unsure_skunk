@@ -22,11 +22,17 @@ func ShiftToJoined(ctx context.Context, dbc *sql.DB, id int64) error {
 			j.KV("round", id))
 	}
 
-	err = roundFSM.Update(ctx, dbc, r.Status, skunk.RoundStatusJoined,
+	return roundFSM.Update(ctx, dbc, r.Status, skunk.RoundStatusJoined,
 		joined{ID: id})
+}
+
+func ShiftToCollected(ctx context.Context, dbc *sql.DB, id, rank int64) error {
+	r, err := Lookup(ctx, dbc, id)
 	if err != nil {
-		return errors.Wrap(err, "failed to shift to joined")
+		return errors.Wrap(err, "failed to lookup round",
+			j.KV("round", id))
 	}
 
-	return nil
+	return roundFSM.Update(ctx, dbc, r.Status, skunk.RoundStatusCollected,
+		collected{ID: id, Rank: rank})
 }

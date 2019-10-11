@@ -59,3 +59,41 @@ func joinMatches(b Backends) reflex.Consumer {
 
 	return reflex.NewConsumer(skunk.ConsumerJoinRounds, f)
 }
+
+func collectParts(b Backends) reflex.Consumer {
+	f := func(ctx context.Context, f fate.Fate, e *reflex.Event) error {
+		// Skip uninteresting states.
+		if !reflex.IsType(e.Type, skunk.RoundStatusCollect) {
+			return fate.Tempt()
+		}
+
+		// Lookup the current round.
+		r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
+		if err != nil {
+			return errors.Wrap(err, "failed to lookup round",
+				j.KV("round", e.ForeignIDInt()))
+		}
+
+		// Attempt to collect parts from the engine.
+		parts, err := b.EngineClient().CollectRound(ctx, team, *player,
+			r.ExternalID)
+		if err != nil {
+			return errors.Wrap(err, "failed to collect parts for round",
+				j.KV("round", r.ExternalID))
+		}
+
+		// TODO(Nick): Insert the parts.
+
+		// Shift the round state to collected.
+		err = rounds.ShiftToCollected(ctx, b.SkunkDB().DB, r.ID,
+			int64(parts.Rank))
+		if err != nil {
+			return errors.Wrap(err, "failed to update state to collected",
+				j.KV("round", r.ID))
+		}
+
+		return fate.Tempt()
+	}
+
+	return reflex.NewConsumer(skunk.ConsumerCollectParts, f)
+}

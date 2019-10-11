@@ -3,7 +3,6 @@ package parts
 import (
 	"context"
 	"database/sql"
-
 	"github.com/luno/jettison/errors"
 	"github.com/luno/jettison/j"
 
@@ -25,8 +24,10 @@ func GetPart(ctx context.Context, dbc *sql.DB, roundID int64, player string) (*s
 	return lookupWhere(ctx, dbc, "round_id=? and player=?", roundID, player)
 }
 
-func InsertPart(ctx context.Context, dbc *sql.DB, part skunk.PartType, rank int64) error {
-	_, err := dbc.Exec("insert into parts set round_id=?, player=?, part=?, created_at=?", part.RoundID, part.Player, part.Part)
+func Create(ctx context.Context, dbc *sql.DB, part skunk.PartType, rank int64) error {
+	_, err := dbc.ExecContext(ctx, "insert into parts set round_id=?, " +
+		"player=?, rank=?. part=?, created_at=now()", part.RoundID,
+		part.Player, rank, part.Part)
 	if err != nil {
 		return errors.Wrap(err, "failed to insert part")
 	}

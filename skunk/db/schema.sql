@@ -35,7 +35,8 @@ create table rounds (
 create table parts (
     id bigint not null auto_increment,     
     round_id int not null,                 
-    player varchar(255) not null,         
+    player varchar(255) not null,
+    rank int not null,
     part int not null,                    
 
     created_at datetime not null,
