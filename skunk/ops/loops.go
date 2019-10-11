@@ -22,15 +22,25 @@ func StartLoops(b Backends) {
 		go consumePeerEvents(b, peer)
 	}
 
+	go consumeEngineEvents(b)
 	go startMatchForever(b)
 	go joinMatchesForever(b)
+	go skipLocalJoinedForever(b)
 	go collectRemotePartsForever(b)
+	go submitPartsForever(b)
 }
 
 func consumePeerEvents(b Backends, peer skunk.Client) {
 	consumable := reflex.NewConsumable(peer.Stream,
 		cursors.ToStore(b.SkunkDB().DB))
 	consumer := makeConsume(b, peer)
+	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
+}
+
+func consumeEngineEvents(b Backends) {
+	consumable := reflex.NewConsumable(b.EngineClient().Stream,
+		cursors.ToStore(b.SkunkDB().DB))
+	consumer := makeEngineConsume(b)
 	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }
 
@@ -61,10 +71,24 @@ func joinMatchesForever(b Backends) {
 	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }
 
+func skipLocalJoinedForever(b Backends) {
+	consumable := reflex.NewConsumable(events.ToStream(b.SkunkDB().DB),
+		cursors.ToStore(b.SkunkDB().DB))
+	consumer := skipLocalJoined(b)
+	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
+}
+
 func collectRemotePartsForever(b Backends) {
 	consumable := reflex.NewConsumable(events.ToStream(b.SkunkDB().DB),
 		cursors.ToStore(b.SkunkDB().DB))
 	consumer := collectRemoteParts(b)
+	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
+}
+
+func submitPartsForever(b Backends) {
+	consumable := reflex.NewConsumable(events.ToStream(b.SkunkDB().DB),
+		cursors.ToStore(b.SkunkDB().DB))
+	consumer := submitParts(b)
 	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }
 
@@ -76,5 +100,3 @@ func Dummy(backends Backends) reflex.Consumer {
 
 	return reflex.NewConsumer(reflex.ConsumerName("generic"), fn)
 }
-
-// Consume match started from the engine
