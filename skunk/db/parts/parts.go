@@ -33,3 +33,11 @@ func InsertPart(ctx context.Context, dbc *sql.DB, part skunk.PartType, rank int6
 
 	return nil
 }
+
+func List(ctx context.Context, dbc *sql.DB, roundID int64) ([]skunk.PartType, error) {
+	if roundID < 0 {
+		return nil, ErrURoundIDInvalid
+	}
+
+	return listWhere(ctx, dbc, "round_id=?", roundID)
+}

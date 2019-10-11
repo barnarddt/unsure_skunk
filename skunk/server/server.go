@@ -2,8 +2,9 @@ package server
 
 import (
 	"context"
+	"unsure_skunk/skunk/ops"
+	"unsure_skunk/skunk/skunkpb/protocp"
 
-	"github.com/luno/jettison/errors"
 	"github.com/luno/reflex/reflexpb"
 
 	"unsure_skunk/skunk/db/events"
@@ -43,5 +44,16 @@ func (srv *Server) Stream(req *reflexpb.StreamRequest, ss pb.Skunk_StreamServer)
 }
 
 func (srv *Server) GetData(ctx context.Context, req *pb.GetDataReq) (*pb.GetDataRes, error) {
-	return nil, errors.New("method not implemented")
+
+	data1, rank, err := ops.LookUpData(ctx, srv.b, req.RoundId)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &pb.GetDataRes{Rank: int32(rank)}
+	for _, dt := range data1 {
+		res.Part = append(res.Part, protocp.PartTypeToProto(&dt))
+	}
+
+	return res, nil
 }

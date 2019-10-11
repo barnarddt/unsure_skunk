@@ -12,7 +12,7 @@ import (
 
 func LookupLastCompletedRound(ctx context.Context, dbc *sql.DB) (*skunk.Round,
 	error) {
-	return lookupWhere(ctx, dbc, "order by external_id desc limit 1")
+	return lookupWhere(ctx, dbc, "order by ext_id desc limit 1")
 }
 
 func ShiftToJoined(ctx context.Context, dbc *sql.DB, id int64) error {
@@ -29,4 +29,8 @@ func ShiftToJoined(ctx context.Context, dbc *sql.DB, id int64) error {
 	}
 
 	return nil
+}
+
+func LookupLatest(ctx context.Context, dbc *sql.DB, player string, round int64) (*skunk.Round, error) {
+	return lookupWhere(ctx, dbc, "where ext_id=? and player=?", round, player)
 }
