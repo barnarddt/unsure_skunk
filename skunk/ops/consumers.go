@@ -2,6 +2,7 @@ package ops
 
 import (
 	"context"
+	"google.golang.org/api/admin/directory/v1"
 	"strconv"
 
 	"github.com/corverroos/unsure/engine"
@@ -55,6 +56,13 @@ func makeEngineConsume(b Backends) reflex.Consumer {
 			}
 
 			return nil
+		}
+
+		if reflex.IsType(e.Type, engine.EventTypeRoundSubmit) {
+			err := updateSubmitState(ctx, b, e)
+			if err != nil {
+				return err
+			}
 		}
 
 		return fate.Tempt()

@@ -162,7 +162,7 @@ func collectPeerParts(ctx context.Context, b Backends, c skunk.Client, e *reflex
 	return nil
 }
 
-func updateSubmitState(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event) error {
+func updateSubmitState(ctx context.Context, b Backends, e *reflex.Event) error {
 	r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
 	if err != nil {
 		return errors.Wrap(err, "failed round lookup")
