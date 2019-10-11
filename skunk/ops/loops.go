@@ -1,14 +1,8 @@
 package ops
 
 import (
-	"context"
-	"time"
-
 	"github.com/corverroos/unsure"
-	"github.com/corverroos/unsure/engine"
 	"github.com/luno/fate"
-	"github.com/luno/jettison/errors"
-	"github.com/luno/jettison/log"
 	"github.com/luno/reflex"
 
 	"unsure_skunk/skunk"
@@ -26,7 +20,7 @@ func StartLoops(b Backends) {
 func consumePeerEvents(b Backends, peer skunk.Client) {
 	consumable := reflex.NewConsumable(peer.Stream,
 		cursors.ToStore(b.SkunkDB().DB))
-	consumer := Dummy(b)
+	consumer := makeConsume(b)
 	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }
 
