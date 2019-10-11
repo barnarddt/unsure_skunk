@@ -21,7 +21,6 @@ create table rounds (
   id bigint not null auto_increment,        -- 1
   external_id bigint not null,                   -- 1
   player varchar(255),                      -- "Skunk#1"
-  rank int not null,                        -- 1
   status int not null,                      -- StatusCollected(1)
   submitted int not null,
 
