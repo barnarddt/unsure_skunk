@@ -20,11 +20,7 @@ func makeConsume(b Backends) reflex.Consumer {
 			skunk.RoundStatusFailed,
 			skunk.RoundStatusSubmit,
 		) {
-			return fate.Tempt();
-		}
-
-		if reflex.IsType(e, skunk.RoundStatusJoin) {
-
+			return fate.Tempt()
 		}
 
 		return fate.Tempt()
