@@ -67,3 +67,5 @@ func Dummy(backends Backends) reflex.Consumer {
 
 	return reflex.NewConsumer(reflex.ConsumerName("generic"), fn)
 }
+
+// Consume match started from the engine

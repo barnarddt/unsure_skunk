@@ -98,16 +98,11 @@ func collectParts(b Backends) reflex.Consumer {
 	return reflex.NewConsumer(skunk.ConsumerCollectParts, f)
 }
 
-func LookUpData(ctx context.Context, b Backends, round int64) ([]skunk.PartType, int, error) {
+func LookUpData(ctx context.Context, b Backends, round int64) ([]skunk.PartType, error) {
 	part, err := parts.List(ctx, b.SkunkDB().DB, round)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 
-	ranker, err := rounds.LookupLatest(ctx, b.SkunkDB().DB, *player, round)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	return part, ranker.Rank, nil
+	return part, nil
 }
