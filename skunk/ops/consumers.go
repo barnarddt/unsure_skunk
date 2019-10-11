@@ -24,12 +24,12 @@ func makeConsume(b Backends, c skunk.Client) reflex.Consumer {
 			// fetch parts from e.ForeignID
 			r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
 
-			part, rank, err := c.GetData(ctx, r.ExternalID)
+			part, err := c.GetData(ctx, r.ExternalID)
 			if err != nil {
 				return errors.Wrap(err, "failed to get data over rpc")
 			}
 
-			err = parts.Create(ctx, b.SkunkDB().DB, part[0], rank)
+			err = parts.CreateBatch(ctx, b.SkunkDB().DB, part)
 			if err != nil {
 				return errors.Wrap(err, "failed to create part")
 			}
