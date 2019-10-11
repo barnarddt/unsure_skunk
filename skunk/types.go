@@ -77,8 +77,9 @@ type Round struct {
 }
 
 type PartType struct {
-	ID      int64  `protocp:"1"`
-	RoundID int64  `protocp:"2"`
-	Player  string `protocp:"3"`
-	Part    int64  `protocp:"4"`
+	ID      int64
+	RoundID int64
+	Player  string
+	Part    int64
+	Rank    int64
 }

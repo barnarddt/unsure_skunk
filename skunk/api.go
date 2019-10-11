@@ -12,5 +12,5 @@ type Client interface {
 
 	Stream(ctx context.Context, after string, opts ...reflex.StreamOption) (reflex.StreamClient, error)
 
-	GetData(ctx context.Context, roundId int64) ([]PartType, int64, error)
+	GetData(ctx context.Context, roundId int64) ([]PartType, error)
 }

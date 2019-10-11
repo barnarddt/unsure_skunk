@@ -61,10 +61,10 @@ func (c *client) Stream(ctx context.Context, after string, opts ...reflex.Stream
 	return sFn(ctx, after, opts...)
 }
 
-func (c *client) GetParts(ctx context.Context, roundId int64, player string) ([]skunk.PartType, int64, error) {
-	res, err := c.rpcClient.GetData(ctx, &pb.GetDataReq{RoundId: roundId, Player: player})
+func (c *client) GetData(ctx context.Context, roundId int64) ([]skunk.PartType, error) {
+	res, err := c.rpcClient.GetData(ctx, &pb.GetDataReq{RoundId: roundId})
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 
 	var pt []skunk.PartType
@@ -72,5 +72,5 @@ func (c *client) GetParts(ctx context.Context, roundId int64, player string) ([]
 		pt = append(pt, *protocp.PartTypeFromProto(ss))
 	}
 
-	return pt, res.Rank, nil
+	return pt, nil
 }
