@@ -167,3 +167,48 @@ func submitNext(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event
 
 	return nil
 }
+
+func submitParts(b Backends) reflex.Consumer {
+	f := func(ctx context.Context, f fate.Fate, e *reflex.Event) error {
+		// Skip uninteresting states.
+		if !reflex.IsType(e.Type, skunk.RoundStatusSubmit) {
+			return fate.Tempt()
+		}
+
+		// Lookup the current round.
+		r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
+		if err != nil {
+			return errors.Wrap(err, "failed to lookup round",
+				j.KV("round", e.ForeignIDInt()))
+		}
+
+		pl, err := parts.ListForPlayerAndRound(ctx, b.SkunkDB().DB, *player,
+			r.ID)
+		if err != nil {
+			return errors.Wrap(err, "failed to lookup parts")
+		}
+
+		total := 0
+		for _, p := range pl {
+			total += int(p.Part)
+		}
+
+		// Submit the total of our parts to the engine.
+		err = b.EngineClient().SubmitRound(ctx, team, *player, r.ExternalID,
+			total)
+		if err != nil {
+			return errors.Wrap(err, "failed to submit part total",
+				j.KV("round", r.ExternalID), j.KV("total", total))
+		}
+
+		// Shift the round to submitted.
+		err = rounds.ShiftToSubmitted(ctx, b.SkunkDB().DB, r.ID)
+		if err != nil {
+			return errors.Wrap(err, "failed to update state to submitted")
+		}
+
+		return fate.Tempt()
+	}
+
+	return reflex.NewConsumer(skunk.ConsumerSubmitParts, f)
+}

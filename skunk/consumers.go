@@ -17,4 +17,8 @@ const (
 	// into RoundStatusJoined and automatically shifts them into
 	// RoundStatusCollect.
 	ConsumerSkipLocalJoined consumer = "skip_local_joined"
+
+	// ConsumerSubmitParts consumes local shift events for records moving into
+	// RoundStatusSubmit and sends their parts to the engine.
+	ConsumerSubmitParts consumer = "submit_parts"
 )

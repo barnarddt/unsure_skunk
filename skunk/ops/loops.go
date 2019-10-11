@@ -26,6 +26,7 @@ func StartLoops(b Backends) {
 	go joinMatchesForever(b)
 	go skipLocalJoinedForever(b)
 	go collectRemotePartsForever(b)
+	go submitPartsForever(b)
 }
 
 func consumePeerEvents(b Backends, peer skunk.Client) {
@@ -73,6 +74,13 @@ func collectRemotePartsForever(b Backends) {
 	consumable := reflex.NewConsumable(events.ToStream(b.SkunkDB().DB),
 		cursors.ToStore(b.SkunkDB().DB))
 	consumer := collectRemoteParts(b)
+	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
+}
+
+func submitPartsForever(b Backends) {
+	consumable := reflex.NewConsumable(events.ToStream(b.SkunkDB().DB),
+		cursors.ToStore(b.SkunkDB().DB))
+	consumer := submitParts(b)
 	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }
 

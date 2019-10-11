@@ -52,6 +52,11 @@ func CreateBatch(ctx context.Context, dbc *sql.DB, parts []skunk.PartType) error
 	return tx.Commit()
 }
 
+func ListForPlayerAndRound(ctx context.Context, dbc *sql.DB, player string,
+	roundID int64) ([]skunk.PartType, error) {
+		return listWhere(ctx, dbc, "player=? and round_id=?", player, roundID)
+}
+
 func List(ctx context.Context, dbc *sql.DB, roundID int64) ([]skunk.PartType, error) {
 	if roundID < 0 {
 		return nil, ErrURoundIDInvalid
