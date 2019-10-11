@@ -20,7 +20,7 @@ func makeConsume(b Backends, c skunk.Client) reflex.Consumer {
 			return fate.Tempt()
 		}
 
-		if !reflex.IsType(e.Type, skunk.RoundStatusCollected) {
+		if reflex.IsType(e.Type, skunk.RoundStatusCollected) {
 			// fetch parts from e.ForeignID
 			r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
 
