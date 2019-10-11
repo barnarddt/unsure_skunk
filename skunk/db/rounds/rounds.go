@@ -12,11 +12,11 @@ import (
 
 func LookupLastCompletedRound(ctx context.Context, dbc *sql.DB) (*skunk.Round,
 	error) {
-	return lookupWhere(ctx, dbc, "order by ext_id desc limit 1")
+	return lookupWhere(ctx, dbc, "1=1 order by ext_id desc limit 1")
 }
 
-func ShitToJoin(ctx context.Context, dbc *sql.DB, player string) (int64, error) {
-	id, err := roundFSM.Insert(ctx, dbc, ready{Player: player})
+func ShitToJoin(ctx context.Context, dbc *sql.DB, player string, extID int64) (int64, error) {
+	id, err := roundFSM.Insert(ctx, dbc, ready{Player: player, ExternalID: extID})
 	if err != nil {
 		return 0, errors.Wrap(err, "failed to insert round")
 	}

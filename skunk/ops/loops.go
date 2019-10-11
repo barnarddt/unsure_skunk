@@ -21,6 +21,7 @@ func StartLoops(b Backends) {
 		go consumePeerEvents(b, peer)
 	}
 
+	go consumeEngineEvents(b)
 	go startMatchForever(b)
 	go joinMatchesForever(b)
 }
@@ -29,6 +30,13 @@ func consumePeerEvents(b Backends, peer skunk.Client) {
 	consumable := reflex.NewConsumable(peer.Stream,
 		cursors.ToStore(b.SkunkDB().DB))
 	consumer := makeConsume(b, peer)
+	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
+}
+
+func consumeEngineEvents(b Backends) {
+	consumable := reflex.NewConsumable(b.EngineClient().Stream,
+		cursors.ToStore(b.SkunkDB().DB))
+	consumer := makeEngineConsume(b)
 	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }
 
@@ -67,5 +75,3 @@ func Dummy(backends Backends) reflex.Consumer {
 
 	return reflex.NewConsumer(reflex.ConsumerName("generic"), fn)
 }
-
-// Consume match started from the engine
