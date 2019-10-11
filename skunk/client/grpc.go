@@ -2,9 +2,11 @@ package client
 
 import (
 	"context"
+	"unsure_skunk/skunk/skunkpb/protocp"
+
+	pb "unsure_skunk/skunk/skunkpb"
 
 	"github.com/corverroos/unsure"
-	pb "github.com/corverroos/unsure/engine/enginepb"
 	"github.com/luno/reflex"
 	"github.com/luno/reflex/reflexpb"
 	"google.golang.org/grpc"
@@ -17,8 +19,9 @@ var _ skunk.Client = (*client)(nil)
 type client struct {
 	address   string
 	rpcConn   *grpc.ClientConn
-	rpcClient pb.EngineClient
+	rpcClient pb.SkunkClient
 }
+
 type option func(*client)
 
 func WithAddress(address string) option {
@@ -39,7 +42,7 @@ func New(opts ...option) (*client, error) {
 		return nil, err
 	}
 
-	c.rpcClient = pb.NewEngineClient(c.rpcConn)
+	c.rpcClient = pb.NewSkunkClient(c.rpcConn)
 
 	return &c, nil
 }
@@ -56,4 +59,12 @@ func (c *client) Stream(ctx context.Context, after string, opts ...reflex.Stream
 	})
 
 	return sFn(ctx, after, opts...)
+}
+
+func (c *client) GetParts(ctx context.Context, roundId int64, player string) (skunk.PartType, int64, error) {
+	res, err := c.rpcClient.GetPart(ctx, &pb.GetPartsReq{RoundId: roundId, Player: player})
+	if err != nil {
+		return skunk.PartType{}, 0, err
+	}
+	return *protocp.PartTypeFromProto(res.Part), res.Rank, err
 }

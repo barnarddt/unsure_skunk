@@ -5,7 +5,25 @@ import "github.com/luno/reflex/reflexpb/reflex.proto";
 
 service Skunk {
   rpc Ping (Empty) returns (Empty) {}
+  rpc GetPart (GetPartsReq) returns (GetPartsRes) {}
   rpc Stream (reflexpb.StreamRequest) returns (stream reflexpb.Event) {}
 }
 
 message Empty {}
+
+message GetPartsReq {
+  int64 round_id = 1;
+  string player = 2;
+}
+
+message GetPartsRes {
+  Part part = 1;
+  int64 rank = 2;
+}
+
+message Part{
+  int64 id = 1;
+  int64 round_id = 2;
+  string player = 3;
+  int64 part = 4;
+}

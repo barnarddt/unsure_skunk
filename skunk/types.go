@@ -20,41 +20,41 @@ func (rs RoundStatus) ReflexType() int {
 }
 
 // ShiftStatus satisfied the shift.Status interface.
-func (rs RoundStatus) ShiftStatus(){}
+func (rs RoundStatus) ShiftStatus() {}
 
 const (
 	// RoundStatusUnknown is an invalid status which usually indicates missing
 	// data.
-	RoundStatusUnknown    RoundStatus = 0
+	RoundStatusUnknown RoundStatus = 0
 
 	// RoundStatusJoin indicates that a Peer is ready to join a round.
-	RoundStatusJoin      RoundStatus = 1
+	RoundStatusJoin RoundStatus = 1
 
 	// RoundStatusJoined indicates that a Peer has successfully joined a round.
-	RoundStatusJoined    RoundStatus = 2
+	RoundStatusJoined RoundStatus = 2
 
 	// RoundStatusCollect indicates that a Peer is ready to collect their parts.
-	RoundStatusCollect   RoundStatus = 3
+	RoundStatusCollect RoundStatus = 3
 
 	// RoundStatusCollected indicates that a Peer has successfully collected
 	// their parts.
 	RoundStatusCollected RoundStatus = 4
 
 	// RoundStatusSubmit indicates that a Peer is ready to submit their parts.
-	RoundStatusSubmit    RoundStatus = 5
+	RoundStatusSubmit RoundStatus = 5
 
 	// RoundStatusSubmitted indicates that a Peer has successfully submitted
 	// their parts.
 	RoundStatusSubmitted RoundStatus = 6
 
 	// RoundStatusSuccess indicates that the round was successful.
-	RoundStatusSuccess   RoundStatus = 7
+	RoundStatusSuccess RoundStatus = 7
 
 	// RoundStatusSuccess indicates that the round was failed.
-	RoundStatusFailed    RoundStatus = 8
+	RoundStatusFailed RoundStatus = 8
 
 	// must be last.
-	roundStatusSentinel  RoundStatus = 9
+	roundStatusSentinel RoundStatus = 9
 )
 
 // Valid returns whether "rs" is a declared RoundStatus constant.
@@ -71,16 +71,14 @@ type Round struct {
 	// Rank for the Peer as provided by Engine.
 	Rank int
 	// Current status for the unique Peer.
-	Status RoundStatus
+	Status    RoundStatus
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	
 }
 
 type PartType struct {
-	ID        int64
-	RoundID   int64
-	Player    string
-	Part      int64
-	CreatedAt time.Time
+	ID      int64  `protocp:"1"`
+	RoundID int64  `protocp:"2"`
+	Player  string `protocp:"3"`
+	Part    int64  `protocp:"4"`
 }

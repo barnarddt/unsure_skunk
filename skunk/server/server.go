@@ -2,11 +2,14 @@ package server
 
 import (
 	"context"
+
+	"github.com/luno/jettison/errors"
 	"github.com/luno/reflex/reflexpb"
 
-	"github.com/luno/reflex"
 	"unsure_skunk/skunk/db/events"
 	pb "unsure_skunk/skunk/skunkpb"
+
+	"github.com/luno/reflex"
 )
 
 var _ pb.SkunkServer = (*Server)(nil)
@@ -37,4 +40,8 @@ func (srv *Server) Ping(ctx context.Context, req *pb.Empty) (*pb.Empty, error) {
 
 func (srv *Server) Stream(req *reflexpb.StreamRequest, ss pb.Skunk_StreamServer) error {
 	return srv.rserver.Stream(srv.stream, req, ss)
+}
+
+func (srv *Server) GetPart(ctx context.Context, req *pb.GetPartsReq) (*pb.GetPartsRes, error) {
+	return nil, errors.New("method not implemented")
 }
