@@ -13,6 +13,7 @@ import (
 
 	"unsure_skunk/skunk"
 	"unsure_skunk/skunk/db/cursors"
+	"unsure_skunk/skunk/db/events"
 )
 
 func StartLoops(b Backends) {
@@ -21,6 +22,7 @@ func StartLoops(b Backends) {
 	}
 
 	go startMatchForever(b)
+	go joinMatchesForever(b)
 }
 
 func consumePeerEvents(b Backends, peer skunk.Client) {
@@ -48,6 +50,13 @@ func startMatchForever(b Backends) {
 
 		time.Sleep(time.Second)
 	}
+}
+
+func joinMatchesForever(b Backends) {
+	consumable := reflex.NewConsumable(events.ToStream(b.SkunkDB().DB),
+		cursors.ToStore(b.SkunkDB().DB))
+	consumer := joinMatches(b)
+	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }
 
 func Dummy(backends Backends) reflex.Consumer {
