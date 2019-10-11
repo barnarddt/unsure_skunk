@@ -31,7 +31,6 @@ type joined struct {
 
 type collected struct{
 	ID int64
-	Rank int64
 }
 
 type empty struct {
