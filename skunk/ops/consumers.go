@@ -46,16 +46,16 @@ func makeEngineConsume(b Backends) reflex.Consumer {
 
 		if engine.EventType(e.Type.ReflexType()) == engine.EventTypeMatchStarted {
 			// Check if a previous round exists
-			var extID int64
+			var ExternalID int64
 
 			r, err := rounds.LookupLastCompletedRound(ctx, b.SkunkDB().DB)
 			if err == nil {
-				extID = r.ExternalID + 1
+				ExternalID = r.ExternalID + 1
 			} else if !errors.Is(err, sql.ErrNoRows) {
 				return err
 			}
 
-			_, err = rounds.ShitToJoin(ctx, b.SkunkDB().DB, GetPlayerName(), extID)
+			_, err = rounds.ShitToJoin(ctx, b.SkunkDB().DB, GetPlayerName(), ExternalID)
 			if err != nil {
 				return err
 			}

@@ -65,7 +65,7 @@ func (rs RoundStatus) Valid() bool {
 type Round struct {
 	ID int64
 	// The RoundID as known on Engine.
-	ExtID int64
+	ExternalID int64
 	// Unique name for each Peer.
 	Player string
 	// Current status for the unique Peer.
