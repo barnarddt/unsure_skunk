@@ -18,7 +18,7 @@ message GetDataReq {
 
 message GetDataRes {
   repeated Part part = 1;
-  int64 rank = 2;
+  int32 rank = 2;
 }
 
 message Part{

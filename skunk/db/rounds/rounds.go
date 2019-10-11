@@ -12,7 +12,7 @@ import (
 
 func LookupLastCompletedRound(ctx context.Context, dbc *sql.DB) (*skunk.Round,
 	error) {
-	return lookupWhere(ctx, dbc, "order by external_id desc limit 1")
+	return lookupWhere(ctx, dbc, "order by ext_id desc limit 1")
 }
 
 func ShitToJoin(ctx context.Context, dbc *sql.DB, player string) (int64, error) {
@@ -24,18 +24,28 @@ func ShitToJoin(ctx context.Context, dbc *sql.DB, player string) (int64, error) 
 	return id, nil
 }
 
-func ShiftToJoined(ctx context.Context, dbc *sql.DB, roundID, extID int64) error {
-	r, err := Lookup(ctx, dbc, roundID)
+func ShiftToJoined(ctx context.Context, dbc *sql.DB, id int64) error {
+	r, err := Lookup(ctx, dbc, id)
 	if err != nil {
 		return errors.Wrap(err, "failed to lookup round",
-			j.KV("round", roundID))
+			j.KV("round", id))
 	}
 
-	err = roundFSM.Update(ctx, dbc, r.Status, skunk.RoundStatusJoined,
-		joined{ID: roundID, ExternalID: extID})
+	return roundFSM.Update(ctx, dbc, r.Status, skunk.RoundStatusJoined,
+		joined{ID: id})
+}
+
+func ShiftToCollected(ctx context.Context, dbc *sql.DB, id, rank int64) error {
+	r, err := Lookup(ctx, dbc, id)
 	if err != nil {
-		return errors.Wrap(err, "failed to shift to joined")
+		return errors.Wrap(err, "failed to lookup round",
+			j.KV("round", id))
 	}
 
-	return nil
+	return roundFSM.Update(ctx, dbc, r.Status, skunk.RoundStatusCollected,
+		collected{ID: id, Rank: rank})
+}
+
+func LookupLatest(ctx context.Context, dbc *sql.DB, player string, round int64) (*skunk.Round, error) {
+	return lookupWhere(ctx, dbc, "where ext_id=? and player=?", round, player)
 }

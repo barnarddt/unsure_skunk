@@ -22,11 +22,11 @@ var roundFSM = shift.NewFSM(events.GetTable()).
 
 type ready struct {
 	Player string
+	ExternalID int64
 }
 
 type joined struct {
 	ID int64
-	ExternalID int64
 }
 
 type collected struct{
