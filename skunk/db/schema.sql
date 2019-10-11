@@ -1,4 +1,4 @@
-create table skunk_cursors (
+create table cursors (
    id varchar(255) not null,
    `cursor` bigint not null,
    updated_at datetime(3) not null,
@@ -6,7 +6,7 @@ create table skunk_cursors (
    primary key (id)
 );
 
-create table skunk_events (
+create table events (
   id bigint not null auto_increment,
   foreign_id bigint not null,
   timestamp datetime(3) not null,
@@ -15,15 +15,28 @@ create table skunk_events (
   primary key (id)
 );
 
-create table skunk_rounds (
-  id bigint not null auto_increment,
-  round_id bigint not null,
-  player varchar(255),
-  status int not null,
+create table rounds (
+  id bigint not null auto_increment,        // 1
+  ext_id bigint not null,                   // 1
+  player varchar(255),                      // "Skunk#1"
+  rank int not null,                        // 1
+  status int not null,                      // StatusCollected(1)
 
   created_at datetime(3) not null,
   updated_at datetime(3) not null,
 
-  primary key (id),
-  unique by_team_status (player,round_id)
+  unique by_team_status (player,round_id),
+
+  primary key (id)
+);
+
+create table parts (
+    id bigint not null auto_increment,     // 1, 2, 3, 4
+    round_id int not null,                 // 1, 1, 1, 1
+    player varchar(255) not null,          // "Skunk#1", "Skunk#4", "Skunk#3", "Skunk#4"
+    part int not null,                     // -34, 16, 4, 21
+
+    created_at datetime not null,
+
+    primary key(id)
 );
