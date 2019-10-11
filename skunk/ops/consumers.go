@@ -2,7 +2,6 @@ package ops
 
 import (
 	"context"
-	"google.golang.org/api/admin/directory/v1"
 	"strconv"
 
 	"github.com/corverroos/unsure/engine"
