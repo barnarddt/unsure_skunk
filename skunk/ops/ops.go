@@ -105,7 +105,6 @@ func LookUpData(ctx context.Context, b Backends, round int64) ([]skunk.PartType,
 	return part, nil
 }
 
-
 func collectPeerParts(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event) error {
 	r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
 
