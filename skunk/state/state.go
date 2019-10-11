@@ -9,7 +9,6 @@ import (
 
 	"github.com/corverroos/unsure/engine"
 	engine_client "github.com/corverroos/unsure/engine/client"
-
 )
 
 var peers = flag.String("peer_addresses", "", "host:port|host:port of peer skunk gRPC service")
@@ -52,6 +51,9 @@ func New() (*State, error) {
 
 	pa := strings.Split(*peers, "|")
 	for _, peerAddr := range pa {
+		if peerAddr == "" {
+			continue
+		}
 		peer, err := client.New(client.WithAddress(peerAddr))
 		if err != nil {
 			return nil, err

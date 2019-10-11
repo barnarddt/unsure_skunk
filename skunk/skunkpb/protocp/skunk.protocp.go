@@ -11,6 +11,7 @@ func PartTypeToProto(in *skunk.PartType) *skunkpb.Part {
 		Part:    in.Part,
 		Player:  in.Player,
 		RoundId: in.RoundID,
+		Rank:    in.Rank,
 	}
 }
 
@@ -20,5 +21,6 @@ func PartTypeFromProto(in *skunkpb.Part) *skunk.PartType {
 		Part:    in.Part,
 		Player:  in.Player,
 		RoundID: in.RoundId,
+		Rank:    in.Rank,
 	}
 }

@@ -3,7 +3,6 @@ package ops
 import (
 	"context"
 	"flag"
-	"unsure_skunk/skunk/db/parts"
 
 	"github.com/luno/fate"
 	"github.com/luno/jettison/errors"
@@ -11,6 +10,7 @@ import (
 	"github.com/luno/reflex"
 
 	"unsure_skunk/skunk"
+	"unsure_skunk/skunk/db/parts"
 	"unsure_skunk/skunk/db/rounds"
 )
 
@@ -64,7 +64,26 @@ func joinMatches(b Backends) reflex.Consumer {
 	return reflex.NewConsumer(skunk.ConsumerJoinRounds, f)
 }
 
-func collectParts(b Backends) reflex.Consumer {
+func skipLocalJoined(b Backends) reflex.Consumer {
+	f := func(ctx context.Context, f fate.Fate, e *reflex.Event) error {
+		// Skip uninteresting states.
+		if !reflex.IsType(e.Type, skunk.RoundStatusJoined) {
+			return fate.Tempt()
+		}
+
+		err := rounds.ShiftToCollect(ctx, b.SkunkDB().DB, e.ForeignIDInt())
+		if err != nil {
+			return errors.Wrap(err, "failed to update state to collect",
+				j.KV("round", e.ForeignIDInt()))
+		}
+
+		return fate.Tempt()
+	}
+
+	return reflex.NewConsumer(skunk.ConsumerSkipLocalJoined, f)
+}
+
+func collectRemoteParts(b Backends) reflex.Consumer {
 	f := func(ctx context.Context, f fate.Fate, e *reflex.Event) error {
 		// Skip uninteresting states.
 		if !reflex.IsType(e.Type, skunk.RoundStatusCollect) {
@@ -79,18 +98,31 @@ func collectParts(b Backends) reflex.Consumer {
 		}
 
 		// Attempt to collect parts from the engine.
-		parts, err := b.EngineClient().CollectRound(ctx, team, *player,
+		pl, err := b.EngineClient().CollectRound(ctx, team, *player,
 			r.ExternalID)
 		if err != nil {
 			return errors.Wrap(err, "failed to collect parts for round",
 				j.KV("round", r.ExternalID))
 		}
 
-		// TODO(Nick): Insert the parts.
+		localParts := make([]skunk.PartType, 0)
+		for _, p := range pl.Players {
+			localParts = append(localParts, skunk.PartType{
+				RoundID: r.ExternalID,
+				Player:  p.Name,
+				Part:    int64(p.Part),
+				Rank:    int64(pl.Rank),
+			})
+		}
+
+		err = parts.CreateBatch(ctx, b.SkunkDB().DB, localParts)
+		if err != nil {
+			return errors.Wrap(err, "failed to insert remote parts",
+				j.KV("round", r.ExternalID))
+		}
 
 		// Shift the round state to collected.
-		err = rounds.ShiftToCollected(ctx, b.SkunkDB().DB, r.ID,
-			int64(parts.Rank))
+		err = rounds.ShiftToCollected(ctx, b.SkunkDB().DB, r.ID)
 		if err != nil {
 			return errors.Wrap(err, "failed to update state to collected",
 				j.KV("round", r.ID))
@@ -102,16 +134,40 @@ func collectParts(b Backends) reflex.Consumer {
 	return reflex.NewConsumer(skunk.ConsumerCollectParts, f)
 }
 
-func LookUpData(ctx context.Context, b Backends, round int64) ([]skunk.PartType, int, error) {
+func LookUpData(ctx context.Context, b Backends, round int64) ([]skunk.PartType, error) {
 	part, err := parts.List(ctx, b.SkunkDB().DB, round)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 
-	ranker, err := rounds.LookupLatest(ctx, b.SkunkDB().DB, *player, round)
+	return part, nil
+}
+
+func collectPeerParts(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event) error {
+	r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
 	if err != nil {
-		return nil, 0, err
+		return errors.Wrap(err, "failed round lookup")
 	}
 
-	return part, ranker.Rank, nil
+	part, err := c.GetData(ctx, r.ExternalID)
+	if err != nil {
+		return errors.Wrap(err, "failed to get data over rpc")
+	}
+
+	err = parts.CreateBatch(ctx, b.SkunkDB().DB, part)
+	if err != nil {
+		return errors.Wrap(err, "failed to create part")
+	}
+
+	return nil
+}
+
+func submitNext(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event) error {
+	// (*skunk.PartType, error)
+	part, err := parts.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
+	if err != nil {
+		return errors.Wrap(err, "failed parts lookup")
+	}
+
+	return nil
 }

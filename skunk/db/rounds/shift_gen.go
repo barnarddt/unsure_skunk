@@ -86,9 +86,6 @@ func (一 collected) Update(ctx context.Context, tx *sql.Tx,from shift.Status,
 	q.WriteString("update rounds set `status`=?, `updated_at`=? ")
 	args = append(args, to.Enum(), time.Now())
 
-	q.WriteString(", `rank`=?")
-	args = append(args, 一.Rank)
-
 	q.WriteString(" where `id`=? and `status`=?")
 	args = append(args, 一.ID, from.Enum())
 

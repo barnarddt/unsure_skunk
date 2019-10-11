@@ -23,15 +23,16 @@ func makeConsume(b Backends, c skunk.Client) reflex.Consumer {
 			return fate.Tempt()
 		}
 
-		if !reflex.IsType(e.Type, skunk.RoundStatusCollected) {
-			// fetch parts from e.ForeignID
-			r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
-
-			part, rank, err := c.GetData(ctx, r.ExternalID)
-			if err != nil {
-				return errors.Wrap(err, "failed to get data over rpc")
+		if reflex.IsType(e.Type, skunk.RoundStatusCollected) {
+			if err := collectPeerParts(ctx, b, c, e); err != nil {
+				return err
 			}
+		}
 
+		if reflex.IsType(e.Type, skunk.RoundStatusSubmitted) {
+			if err := submitNext(ctx, b, c, e); err != nil {
+				return err
+			}
 		}
 
 		return fate.Tempt()

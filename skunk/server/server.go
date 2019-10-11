@@ -45,12 +45,12 @@ func (srv *Server) Stream(req *reflexpb.StreamRequest, ss pb.Skunk_StreamServer)
 
 func (srv *Server) GetData(ctx context.Context, req *pb.GetDataReq) (*pb.GetDataRes, error) {
 
-	data1, rank, err := ops.LookUpData(ctx, srv.b, req.RoundId)
+	data1, err := ops.LookUpData(ctx, srv.b, req.RoundId)
 	if err != nil {
 		return nil, err
 	}
 
-	res := &pb.GetDataRes{Rank: int32(rank)}
+	res := &pb.GetDataRes{}
 	for _, dt := range data1 {
 		res.Part = append(res.Part, protocp.PartTypeToProto(&dt))
 	}

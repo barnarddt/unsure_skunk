@@ -35,7 +35,18 @@ func ShiftToJoined(ctx context.Context, dbc *sql.DB, id int64) error {
 		joined{ID: id})
 }
 
-func ShiftToCollected(ctx context.Context, dbc *sql.DB, id, rank int64) error {
+func ShiftToCollect(ctx context.Context, dbc *sql.DB, id int64) error {
+	r, err := Lookup(ctx, dbc, id)
+	if err != nil {
+		return errors.Wrap(err, "failed to lookup round",
+			j.KV("round", id))
+	}
+
+	return roundFSM.Update(ctx, dbc, r.Status, skunk.RoundStatusCollect,
+		empty{ID: id})
+}
+
+func ShiftToCollected(ctx context.Context, dbc *sql.DB, id int64) error {
 	r, err := Lookup(ctx, dbc, id)
 	if err != nil {
 		return errors.Wrap(err, "failed to lookup round",
@@ -43,7 +54,7 @@ func ShiftToCollected(ctx context.Context, dbc *sql.DB, id, rank int64) error {
 	}
 
 	return roundFSM.Update(ctx, dbc, r.Status, skunk.RoundStatusCollected,
-		collected{ID: id, Rank: rank})
+		collected{ID: id})
 }
 
 func LookupLatest(ctx context.Context, dbc *sql.DB, player string, round int64) (*skunk.Round, error) {

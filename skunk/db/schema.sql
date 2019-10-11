@@ -1,4 +1,4 @@
-create database skunk;
+
 
 create table cursors (
    id varchar(255) not null,
@@ -27,7 +27,7 @@ create table rounds (
   created_at datetime(3) not null,
   updated_at datetime(3) not null,
 
-  unique by_team_status (player,round_id),
+  unique by_team_status (player, ext_id),
 
   primary key (id)
 );

@@ -7,15 +7,16 @@ import (
 	"unsure_skunk/skunk/server"
 	"unsure_skunk/skunk/skunkpb"
 
-	"github.com/corverroos/unsure"
 	"unsure_skunk/skunk/state"
+
+	"github.com/corverroos/unsure"
 
 	"github.com/luno/jettison/errors"
 )
 
 var (
-	httpAddress = flag.String("http_address", ":12047", "skunk healthcheck address")
-	grpcAddress = flag.String("grpc_address", ":12048", "skunk grpc server address")
+	httpAddress = flag.String("http_address", ":1949", "skunk healthcheck address")
+	grpcAddress = flag.String("grpc_address", ":1948", "skunk grpc server address")
 )
 
 func main() {
