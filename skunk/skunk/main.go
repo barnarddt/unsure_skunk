@@ -2,13 +2,14 @@ package main
 
 import (
 	"flag"
-	"github.com/corverroos/unsure/skunk/state"
 	"net/http"
+	"unsure_skunk/skunk/ops"
 
 	"github.com/corverroos/unsure"
 	"github.com/corverroos/unsure/engine/enginepb"
-	engine_ops "github.com/corverroos/unsure/engine/ops"
-	engine_server "github.com/corverroos/unsure/engine/server"
+
+
+	"unsure_skunk/skunk/state"
 
 	"github.com/luno/jettison/errors"
 )
@@ -28,7 +29,7 @@ func main() {
 
 	go serveGRPCForever(s)
 
-	engine_ops.StartLoops(s)
+	ops.StartLoops(s)
 
 	http.HandleFunc("/health", makeHealthCheckHandler())
 	go unsure.ListenAndServeForever(*httpAddress, nil)

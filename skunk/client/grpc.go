@@ -3,9 +3,9 @@ package client
 import (
 	"context"
 
-	"unsure_skunk/skunk"
 	"github.com/corverroos/unsure"
 	pb "github.com/corverroos/unsure/engine/enginepb"
+	"unsure_skunk/skunk"
 
 	"google.golang.org/grpc"
 )

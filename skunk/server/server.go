@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 
-	"github.com/corverroos/unsure/skunk/db/events"
-	pb "github.com/corverroos/unsure/skunk/skunkpb"
 	"github.com/luno/reflex"
+	"unsure_skunk/skunk/db/events"
+	pb "unsure_skunk/skunk/skunkpb"
 )
 
 var _ pb.SkunkServer = (*Server)(nil)
@@ -22,7 +22,7 @@ func New(b Backends) *Server {
 	return &Server{
 		b:       b,
 		rserver: reflex.NewServer(),
-		stream:  events.ToStream(b.EngineDB().DB),
+		stream:  events.ToStream(b.SkunkDB().DB),
 	}
 }
 

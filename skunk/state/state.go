@@ -3,13 +3,13 @@ package state
 import (
 	"flag"
 	"strings"
-
-	"github.com/corverroos/unsure/skunk/client"
+	"unsure_skunk/skunk"
+	"unsure_skunk/skunk/client"
+	"unsure_skunk/skunk/db"
 
 	"github.com/corverroos/unsure/engine"
 	engine_client "github.com/corverroos/unsure/engine/client"
-	"github.com/corverroos/unsure/skunk"
-	"github.com/corverroos/unsure/skunk/db"
+
 )
 
 var peers = flag.String("peer_addresses", "", "host:port|host:port of peer skunk gRPC service")
@@ -22,6 +22,14 @@ type State struct {
 
 func (s *State) SkunkDB() *db.SkunkDB {
 	return s.skunkDB
+}
+
+func (s *State) EngineClient() engine.Client {
+	return s.engineClient
+}
+
+func (s *State) GetPeers() []skunk.Client {
+	return s.peers
 }
 
 // New returns a new engine state.
