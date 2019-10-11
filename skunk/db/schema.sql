@@ -1,3 +1,5 @@
+create database skunk;
+
 create table cursors (
    id varchar(255) not null,
    `cursor` bigint not null,
@@ -31,10 +33,10 @@ create table rounds (
 );
 
 create table parts (
-    id bigint not null auto_increment,     // 1, 2, 3, 4
-    round_id int not null,                 // 1, 1, 1, 1
-    player varchar(255) not null,          // "Skunk#1", "Skunk#4", "Skunk#3", "Skunk#4"
-    part int not null,                     // -34, 16, 4, 21
+    id bigint not null auto_increment,     
+    round_id int not null,                 
+    player varchar(255) not null,         
+    part int not null,                    
 
     created_at datetime not null,
 
