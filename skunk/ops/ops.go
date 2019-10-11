@@ -2,8 +2,8 @@ package ops
 
 import (
 	"context"
-	"database/sql"
 	"flag"
+	"unsure_skunk/skunk/db/parts"
 
 	"github.com/luno/fate"
 	"github.com/luno/jettison/errors"
@@ -14,7 +14,7 @@ import (
 	"unsure_skunk/skunk/db/rounds"
 )
 
-var player = flag.String("player", "loser", "player name")
+var player = flag.String("player", "skunky", "player name")
 
 const (
 	team = "skunkworx"
@@ -60,6 +60,7 @@ func joinMatches(b Backends) reflex.Consumer {
 	return reflex.NewConsumer(skunk.ConsumerJoinRounds, f)
 }
 
+<<<<<<< HEAD
 func collectParts(b Backends) reflex.Consumer {
 	f := func(ctx context.Context, f fate.Fate, e *reflex.Event) error {
 		// Skip uninteresting states.
@@ -96,4 +97,18 @@ func collectParts(b Backends) reflex.Consumer {
 	}
 
 	return reflex.NewConsumer(skunk.ConsumerCollectParts, f)
+}
+
+func LookUpData(ctx context.Context, b Backends, round int64) ([]skunk.PartType, int, error) {
+	part, err := parts.List(ctx, b.SkunkDB().DB, round)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	ranker, err := rounds.LookupLatest(ctx, b.SkunkDB().DB, *player, round)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return part, ranker.Rank, nil
 }
