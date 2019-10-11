@@ -23,6 +23,21 @@ func makeConsume(b Backends) reflex.Consumer {
 			return fate.Tempt()
 		}
 
+		if !reflex.IsAnyType(e.Type, skunk.RoundStatusJoin) {}
+
+		if !reflex.IsAnyType(e.Type, skunk.RoundStatusJoin) {}
+
+		if !reflex.IsAnyType(e.Type, skunk.RoundStatusJoin) {}
+
+		if !reflex.IsAnyType(e.Type, skunk.RoundStatusJoin) {}
+
+		if !reflex.IsAnyType(e.Type, skunk.RoundStatusJoin) {}
+
+		if !reflex.IsAnyType(e.Type, skunk.RoundStatusJoin) {}
+
+		if !reflex.IsAnyType(e.Type, skunk.RoundStatusJoin) {}
+
+
 		return fate.Tempt()
 	}
 
