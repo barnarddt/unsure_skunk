@@ -17,6 +17,7 @@ import (
 )
 
 func StartLoops(b Backends) {
+
 	for _, peer := range b.GetPeers() {
 		go consumePeerEvents(b, peer)
 	}
@@ -36,7 +37,7 @@ func startMatchForever(b Backends) {
 	for {
 		ctx := unsure.ContextWithFate(context.Background(), unsure.DefaultFateP())
 
-		err := b.EngineClient().StartMatch(ctx, team, len(b.GetPeers()))
+		err := b.EngineClient().StartMatch(ctx, team, len(b.GetPeers())+1)
 
 		if errors.Is(err, engine.ErrActiveMatch) {
 			// Match active, just ignore
