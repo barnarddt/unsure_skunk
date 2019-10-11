@@ -9,7 +9,7 @@ import (
 
 // cursors wrap the engine_cursors table providing a reflex cursor store for any
 // and all consumers running in engine.
-var cursors = rsql.NewCursorsTable("skunk_cursors",
+var cursors = rsql.NewCursorsTable("cursors",
 	rsql.WithCursorCursorField("`cursor`"))
 
 // ToStore returns a reflex cursor store backed by the engine_cursors table.
