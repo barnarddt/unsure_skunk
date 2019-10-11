@@ -82,9 +82,25 @@ func collectParts(b Backends) reflex.Consumer {
 				j.KV("round", r.ExternalID))
 		}
 
+		localParts := make([]skunk.PartType, 0)
+		for _, p := range pl.Players {
+			localParts = append(localParts, skunk.PartType{
+				RoundID: r.ExternalID,
+				Player:  p.Name,
+				Part:    int64(p.Part),
+				Rank:    int64(pl.Rank),
+			})
+		}
+
+		err = parts.CreateBatch(ctx, b.SkunkDB().DB, localParts)
+		if err != nil {
+			return errors.Wrap(err, "failed to insert remote parts",
+				j.KV("round", r.ExternalID))
+		}
+
 		// Shift the round state to collected.
-		err = rounds.ShiftToCollected(ctx, b.SkunkDB().DB, r.ID,
-			int64(pl.Rank))
+		err = rounds.ShiftToCollected(ctx, b.SkunkDB().DB, r.ID)
+
 		if err != nil {
 			return errors.Wrap(err, "failed to update state to collected",
 				j.KV("round", r.ID))
