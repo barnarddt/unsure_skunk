@@ -1,0 +1,9 @@
+syntax = "proto3";
+package skunkpb;
+
+
+service Skunk {
+  rpc Ping (Empty) returns (Empty) {}
+}
+
+message Empty {}
