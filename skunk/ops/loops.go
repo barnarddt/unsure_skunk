@@ -17,12 +17,14 @@ import (
 )
 
 func StartLoops(b Backends) {
+
 	for _, peer := range b.GetPeers() {
 		go consumePeerEvents(b, peer)
 	}
 
 	go startMatchForever(b)
 	go joinMatchesForever(b)
+	go collectRemotePartsForever(b)
 }
 
 func consumePeerEvents(b Backends, peer skunk.Client) {
@@ -36,7 +38,7 @@ func startMatchForever(b Backends) {
 	for {
 		ctx := unsure.ContextWithFate(context.Background(), unsure.DefaultFateP())
 
-		err := b.EngineClient().StartMatch(ctx, team, len(b.GetPeers()))
+		err := b.EngineClient().StartMatch(ctx, team, len(b.GetPeers())+1)
 
 		if errors.Is(err, engine.ErrActiveMatch) {
 			// Match active, just ignore
@@ -56,6 +58,13 @@ func joinMatchesForever(b Backends) {
 	consumable := reflex.NewConsumable(events.ToStream(b.SkunkDB().DB),
 		cursors.ToStore(b.SkunkDB().DB))
 	consumer := joinMatches(b)
+	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
+}
+
+func collectRemotePartsForever(b Backends) {
+	consumable := reflex.NewConsumable(events.ToStream(b.SkunkDB().DB),
+		cursors.ToStore(b.SkunkDB().DB))
+	consumer := collectRemoteParts(b)
 	unsure.ConsumeForever(unsure.FatedContext, consumable.Consume, consumer)
 }
 
