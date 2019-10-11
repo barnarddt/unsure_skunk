@@ -18,10 +18,18 @@ func makeConsume(b Backends, c skunk.Client) reflex.Consumer {
 		}
 
 		if reflex.IsType(e.Type, skunk.RoundStatusCollected) {
-			// fetch parts from e.ForeignID
 			if err := collectPeerParts(ctx, b, c, e); err != nil {
 				return err
 			}
+		}
+
+		if reflex.IsType(e.Type, skunk.RoundStatusSubmitted) {
+			// find out next player
+			if isLeader() {
+				// submit parts
+				return nil
+			}
+			return nil
 		}
 
 		return fate.Tempt()
