@@ -10,17 +10,17 @@ import (
 func makeConsume(b Backends) reflex.Consumer {
 	fn := func(ctx context.Context, fate fate.Fate, e *reflex.Event) error {
 		if !reflex.IsAnyType(e.Type,
-			skunk.RoundStatusJoin,
 			skunk.RoundStatusJoined,
-			skunk.RoundStatusCollect,
 			skunk.RoundStatusCollected,
-			skunk.RoundStatusSubmit,
 			skunk.RoundStatusSubmitted,
 			skunk.RoundStatusSuccess,
 			skunk.RoundStatusFailed,
-			skunk.RoundStatusSubmit,
 		) {
 			return fate.Tempt()
+		}
+
+		if !reflex.IsAnyType(e.Type, skunk.RoundStatusCollected) {
+			// fetch parts from e.ForeignID
 		}
 
 		return fate.Tempt()

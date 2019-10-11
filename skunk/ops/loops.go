@@ -34,7 +34,7 @@ func startMatchForever(b Backends) {
 	for {
 		ctx := unsure.ContextWithFate(context.Background(), unsure.DefaultFateP())
 
-		err := b.EngineClient().StartMatch(ctx, "skunkworx", len(b.GetPeers()))
+		err := b.EngineClient().StartMatch(ctx, team, len(b.GetPeers()))
 
 		if errors.Is(err, engine.ErrActiveMatch) {
 			// Match active, just ignore
