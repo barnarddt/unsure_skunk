@@ -4,10 +4,7 @@ import (
 	"context"
 	"github.com/luno/fate"
 	"github.com/luno/reflex"
-	"github.com/pkg/errors"
 	"unsure_skunk/skunk"
-	"unsure_skunk/skunk/db/parts"
-	"unsure_skunk/skunk/db/rounds"
 )
 
 func makeConsume(b Backends, c skunk.Client) reflex.Consumer {
@@ -20,18 +17,10 @@ func makeConsume(b Backends, c skunk.Client) reflex.Consumer {
 			return fate.Tempt()
 		}
 
-		if !reflex.IsType(e.Type, skunk.RoundStatusCollected) {
+		if reflex.IsType(e.Type, skunk.RoundStatusCollected) {
 			// fetch parts from e.ForeignID
-			r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
-
-			part, err := c.GetData(ctx, r.ExternalID)
-			if err != nil {
-				return errors.Wrap(err, "failed to get data over rpc")
-			}
-
-			err = parts.CreateBatch(ctx, b.SkunkDB().DB, part)
-			if err != nil {
-				return errors.Wrap(err, "failed to create part")
+			if err := collectPeerParts(ctx, b, c, e); err != nil {
+				return err
 			}
 		}
 

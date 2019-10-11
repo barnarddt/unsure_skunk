@@ -10,9 +10,8 @@ import (
 	"github.com/luno/reflex"
 
 	"unsure_skunk/skunk"
-	"unsure_skunk/skunk/db/rounds"
 	"unsure_skunk/skunk/db/parts"
-
+	"unsure_skunk/skunk/db/rounds"
 )
 
 var player = flag.String("player", "skunky", "player name")
@@ -101,6 +100,7 @@ func collectParts(b Backends) reflex.Consumer {
 
 		// Shift the round state to collected.
 		err = rounds.ShiftToCollected(ctx, b.SkunkDB().DB, r.ID)
+
 		if err != nil {
 			return errors.Wrap(err, "failed to update state to collected",
 				j.KV("round", r.ID))
@@ -119,4 +119,21 @@ func LookUpData(ctx context.Context, b Backends, round int64) ([]skunk.PartType,
 	}
 
 	return part, nil
+}
+
+
+func collectPeerParts(ctx context.Context, b Backends, c skunk.Client, e *reflex.Event) error {
+	r, err := rounds.Lookup(ctx, b.SkunkDB().DB, e.ForeignIDInt())
+
+	part, err := c.GetData(ctx, r.ExternalID)
+	if err != nil {
+		return errors.Wrap(err, "failed to get data over rpc")
+	}
+
+	err = parts.CreateBatch(ctx, b.SkunkDB().DB, part)
+	if err != nil {
+		return errors.Wrap(err, "failed to create part")
+	}
+
+	return nil
 }
